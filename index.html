@@ -10,17 +10,135 @@
     body {
       font-family: 'Montserrat', sans-serif;
     }
+    /* Card */
+    .card {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+
+  .card-body {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Table inside card */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 2px;
+    font-size: 14px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  th {
+    font-weight: 500;
+    color: #666;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Row hover effect */
+  tbody tr {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .badge-gray    { background: #f1f0e8; color: #444441; }
+  .badge-red     { background: #fcebeb; color: #791f1f; }
+  .badge-orange  { background: #fef0e6; color: #7a3510; }
+  .badge-amber   { background: #faeeda; color: #633806; }
+  .badge-yellow  { background: #fefce6; color: #6b5c08; }
+  .badge-lime    { background: #f2fadf; color: #2d5010; }
+  .badge-green   { background: #eaf3de; color: #27500a; }
+  .badge-teal    { background: #e1f5ee; color: #085041; }
+  .badge-cyan    { background: #e6f9fb; color: #0a4e57; }
+  .badge-blue    { background: #e6f1fb; color: #0c447c; }
+  .badge-indigo  { background: #eaebfe; color: #2d318a; }
+  .badge-purple  { background: #eeedfe; color: #3c3489; }
+  .badge-pink    { background: #fbeaf0; color: #72243e; }
+  .badge-coral   { background: #faece7; color: #711b13; }
+  .badge-rose    { background: #fde8ef; color: #7a1535; }
   </style>
 </head>
 <body>
   <h1>Websites - Hosting and mantaining of custom websites</h1>
   <hr>
+  <section id="what-we-do">
   <h2>What we do</h2>
   <ul>
-    <li>Host websites at a <a href="pricing">low cost</a></li>
+    <li>Host websites at a <a href="#pricing">low cost</a></li>
     <li>Help mantain websites and inform you of problems</li>
-    <li><a href="creation-info">Generation of websites</a></li>
+    <li><a href="#creation-info">Custom creation of websites</a></li>
   </ul>
+  </section>
   <br>
-  <h2></h2>
+  <section id="pricing">
+  <section id="individual">
+  <h2>Pricing</h2>
+  <div id="card">
+    <h3>Free <span class="badge badge-yellow">Individual</span></h3>
+    <h4>$0.00/mth | $0.00/yr</h4>
+  <div id="card">
+    <h3>Tier 1 <span class="badge badge-yellow">Individual</span></h3>
+    <h4>$1.00/mth | $10.00/yr <span class="badge badge-cyan">Save $2.00</span></h4>
+  </div>
+  <div id="card">
+    <h3>Tier 2 <span class="badge-yellow"></span></h3>
+    <h4>$5.00/mth | $50.00/yr <span class="badge badge-green">Save $10.00</span></h4>
+  </div>
+  <div id="card">
+    <h3>Tier 3 <span class="badge badge-yellow">Individual</span></h3>
+    <h4>$10.00/mth | $100/yr <span class="badge badge-teal">Save $20.00</span></h4>
+  </div>
+  </section>
+  <section id="team">
+  <div id="card">
+    <h3>1-5 people [TIER 1] <span class="badge badge-blue">Team</span></h3>
+    <h4>$10.00/mth | $100.00/yr (per person)+ $10.00 <span class="badge badge-cyan">Save $20.00/person</span></h4>
+  </div>
+  <div id="card">
+    <h3>5-50 people [TIER 2] <span class="badge badge-blue">Team</span></h3>
+    <h4>$50/mth | $500/yr (per person) + $50.00 <span class="badge badge-green">Save $100/person</span></h4>
+  </div>
+  <div id="card">
+    <h3>50++ people [TIER 3] <span class="badge badge-blue">Team</span></h3>
+    <h4>$100/mth | $1000/yr (per person) + $100.00 <span class="badge badge-teal">Save $200/person</span></h4>
+  </div>
+  </section>
+  <section id="compare">
+    
 </body>
