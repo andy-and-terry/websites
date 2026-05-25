@@ -1,0 +1,112 @@
+/* =====================
+   Base / Reset
+   ===================== */
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden; /* prevent horizontal scroll caused by wide elements */
+}
+
+/* =====================
+   Splash Screen
+   ===================== */
+
+/* The splash screen covers the entire viewport on top of all other content */
+#splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* sit above everything else on the page */
+  opacity: 1;
+  transition: opacity 2s ease; /* smooth fade when .fade-out class is added by app.js */
+}
+
+/* The logo starts invisible and fades in via the fadeIn keyframe animation */
+#splash-logo {
+  width: 360px;
+  height: auto;
+  opacity: 0; /* start transparent; fadeIn animation brings it to opacity:1 */
+  animation: fadeIn 2s forwards;
+}
+
+/* Keyframe: gradually brings opacity from 0 to 1 */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Applied by app.js to trigger the CSS fade-out transition on the splash screen.
+   !important ensures this overrides the opacity:1 set inline or elsewhere. */
+.fade-out {
+  opacity: 0 !important;
+}
+
+/* =====================
+   Main Content
+   ===================== */
+
+/* Main content starts hidden; app.js sets opacity to 1 after the splash fades out */
+#main-content {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+/* =====================
+   Sections & Typography
+   ===================== */
+section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+h1, h2 {
+  margin-bottom: 20px;
+}
+
+/* =====================
+   Cards Layout
+   ===================== */
+
+/* Flexbox row that wraps cards onto multiple lines on smaller screens */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3); /* subtle red glow for brand styling */
+}
+
+/* =====================
+   Hero Buttons
+   ===================== */
+.hero-buttons a {
+  margin: 10px;
+  padding: 10px 20px;
+  background: #f00;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* =====================
+   Footer
+   ===================== */
+footer {
+  padding: 20px;
+  background: #111;
+  text-align: center;
+}
