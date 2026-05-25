@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Ensures proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="assets/logo.png">
   <title>The Mad Bros</title>
   <link rel="stylesheet" href="style.css">
-  <!-- `defer` makes the script load after the HTML is parsed, avoiding blocking -->
+  <link rel="icon" type="image/x-icon" href="assets/logo.png">
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -20,6 +19,10 @@
   <div id="main-content">
 	  <section id="announce">
 		<h3>IMPORTANT: <bold>Website moving soon!</bold></h3>
+		<p>You may experience downtime when website is being moved.</p>
+		<p>Progress:</p>
+		<progress id="download" value="30" max="100">30%</progress>
+		<p><small><em>No downtime was detected during the moving peroid.</em></small></p>
 	  </section>
 
     <!-- Hero section: main headline and navigation buttons -->
