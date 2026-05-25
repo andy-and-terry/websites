@@ -1,0 +1,32 @@
+User-agent: *
+Disallow: /
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+User-agent: Slurp
+Disallow:
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: WinHTTrack
+Disallow: /
+
+User-agent: HTTrack Website Copier
+Disallow: /
+
+User-agent: *
+Noindex: /
