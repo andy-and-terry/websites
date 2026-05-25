@@ -2,7 +2,19 @@
 User-agent: Googlebot
 Disallow:
 
-# Block AI training crawlers
+# Allow Google's specialist crawlers
+User-agent: Googlebot-Image
+Disallow:
+
+User-agent: Googlebot-Video
+Disallow:
+
+User-agent: Googlebot-News
+Disallow:
+
+# -----------------------------------------------
+# Block AI training & LLM crawlers
+# -----------------------------------------------
 User-agent: GPTBot
 Disallow: /
 
@@ -18,13 +30,90 @@ Disallow: /
 User-agent: Claude-Web
 Disallow: /
 
+User-agent: ClaudeBot
+Disallow: /
+
 User-agent: Google-Extended
 Disallow: /
 
 User-agent: Omgilibot
 Disallow: /
 
-# Block scrapers and offline downloaders
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+# -----------------------------------------------
+# Block SEO crawlers & link analysers
+# -----------------------------------------------
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: SeznamBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Screaming Frog SEO Spider
+Disallow: /
+
+User-agent: SeekportBot
+Disallow: /
+
+User-agent: serpstatbot
+Disallow: /
+
+User-agent: linkdexbot
+Disallow: /
+
+User-agent: Mediatoolkitbot
+Disallow: /
+
+User-agent: BacklinkCrawler
+Disallow: /
+
+# -----------------------------------------------
+# Block scrapers, downloaders & automation tools
+# -----------------------------------------------
 User-agent: HTTrack
 Disallow: /
 
@@ -49,6 +138,104 @@ Disallow: /
 User-agent: scrapy
 Disallow: /
 
+User-agent: Go-http-client
+Disallow: /
+
+User-agent: Java
+Disallow: /
+
+User-agent: Jakarta Commons-HttpClient
+Disallow: /
+
+User-agent: okhttp
+Disallow: /
+
+User-agent: Wget
+Disallow: /
+
+User-agent: LWP::Simple
+Disallow: /
+
+User-agent: Python-urllib
+Disallow: /
+
+User-agent: mechanize
+Disallow: /
+
+User-agent: node-fetch
+Disallow: /
+
+User-agent: axios
+Disallow: /
+
+# -----------------------------------------------
+# Block spam & malicious bots
+# -----------------------------------------------
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: spbot
+Disallow: /
+
+User-agent: Exabot
+Disallow: /
+
+User-agent: SurveyBot
+Disallow: /
+
+User-agent: EmailCollector
+Disallow: /
+
+User-agent: EmailSiphon
+Disallow: /
+
+User-agent: WebBandit
+Disallow: /
+
+User-agent: EmailWolf
+Disallow: /
+
+User-agent: ExtractorPro
+Disallow: /
+
+User-agent: CopyRightCheck
+Disallow: /
+
+User-agent: Crescent
+Disallow: /
+
+User-agent: SiteSnagger
+Disallow: /
+
+User-agent: ProWebWalker
+Disallow: /
+
+User-agent: CheeseBot
+Disallow: /
+
+User-agent: LNSpiderguy
+Disallow: /
+
+User-agent: Teleport Pro
+Disallow: /
+
+User-agent: NICErsPRO
+Disallow: /
+
+User-agent: DigExt
+Disallow: /
+
+User-agent: Black Hole
+Disallow: /
+
+User-agent: ISC Systems iRc Search 2.1
+Disallow: /
+
+User-agent: Szukacz
+Disallow: /
+
+# -----------------------------------------------
 # Block all other crawlers and bots
+# -----------------------------------------------
 User-agent: *
 Disallow: /
