@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  background: #000;
+  color: #00ff88;
+  font-family: monospace;
+}
+header {
+  padding: 40px;
+  text-align: center;
+}
+header h1 {
+  color: red;
+  font-size: 3rem;
+}
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+.codebox {
+  border: 1px solid #033;
+  background: #010101;
+  padding: 15px;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,97 @@
+/* ===== RESET ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ===== SPLASH ===== */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 999;
+  animation: splashOut 1s ease forwards;
+  animation-delay: 2.5s;
+}
+
+#splash h1 {
+  font-size: 3rem;
+  color: #ff0000;
+  margin-top: 10px;
+}
+
+#splash p {
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+@keyframes splashOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ===== MAIN SITE ===== */
+#site {
+  padding: 30px;
+  opacity: 0;
+  animation: siteIn 1s ease forwards;
+  animation-delay: 3s;
+}
+
+@keyframes siteIn {
+  to { opacity: 1; }
+}
+
+/* ===== HEADER ===== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 15px;
+  opacity: 0.8;
+}
+nav a:hover {
+  opacity: 1;
+  color: #ff0000;
+}
+
+/* ===== SECTIONS ===== */
+section {
+  margin-bottom: 50px;
+}
+
+h2 {
+  color: #ff0000;
+  margin-bottom: 10px;
+}
+
+.movie {
+  border: 1px solid #222;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid #222;
+  padding-top: 15px;
+  font-size: 0.9em;
+  opacity: 0.7;
+}
