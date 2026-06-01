@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Explorer — Powered by Google Fonts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Site UI fonts — all from Google Fonts API -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f5f2eb;
+  --surface:  #fff;
+  --ink:      #1a1814;
+  --mid:      #6b6760;
+  --border:   #ddd9d0;
+  --accent:   #d4420a;
+  --accent2:  #2563eb;
+  --code-bg:  #1a1814;
+  --code-fg:  #f5f2eb;
+  --radius:   12px;
+  --ff-head:  'Syne', sans-serif;
+  --ff-body:  'Instrument Sans', sans-serif;
+  --ff-mono:  'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--ff-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-logo {
+  font-family: var(--ff-head);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.topbar-logo span { color: #f97316; }
+
+.gf-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ff-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(245,242,235,0.55);
+}
+
+.gf-badge a {
+  color: #93c5fd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.gf-badge a:hover { text-decoration: underline; }
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: calc(100vh - 52px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  overflow-y: auto;
+  height: calc(100vh - 52px);
+  position: sticky;
+  top: 52px;
+}
+
+.sidebar h2 {
+  font-family: var(--ff-head);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.sidebar h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sidebar-desc {
+  font-size: 13px;
+  color: var(--mid);
+  margin-top: -16px;
+}
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+
+.field-label {
+  font-family: var(--ff-head);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+/* ── CHECKBOXES ── */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.cb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.cb-item:hover { border-color: var(--accent); background: #fef2ec; }
+
+.cb-item input[type="checkbox"] { display: none; }
+
+.cb-box {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+
+.cb-item input:checked ~ .cb-box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.cb-item input:checked ~ .cb-box::after {
+  content: '';
+  width: 9px; height: 6px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+.cb-item input:checked ~ .cb-text { color: var(--accent); font-weight: 500; }
+
+.cb-text { font-size: 13px; color: var(--ink); transition: color 0.15s; }
+
+/* ── TEXT INPUT ── */
+.text-input {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  padding: 10px 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.text-input:focus { border-color: var(--accent); }
+
+textarea.text-input {
+  resize: vertical;
+  min-height: 70px;
+  line-height: 1.5;
+}
+
+/* ── RANGE ── */
+.range-wrap { display: flex; align-items: center; gap: 10px; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+
+.range-val {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--accent);
+  min-width: 38px;
+  text-align: right;
+}
+
+/* ── WEIGHT PILLS ── */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.pill {
+  padding: 5px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--ff-body);
+  cursor: pointer;
+  color: var(--mid);
+  background: var(--bg);
+  transition: all 0.15s;
+}
+
+.pill.active { border-color: var(--accent); color: var(--accent); background: #fef2ec; font-weight: 500; }
+.pill:hover:not(.active) { border-color: #aaa; color: var(--ink); }
+
+/* ── COLOR ROW ── */
+.color-row { display: flex; align-items: center; gap: 10px; }
+
+.color-swatch-wrap {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  flex: 1;
+}
+
+.color-swatch-wrap span { font-size: 12px; color: var(--mid); }
+
+input[type="color"] {
+  width: 24px; height: 24px;
+  border: none;
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+
+/* ── SEARCH BTN ── */
+.search-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.search-btn:hover { background: #b83508; }
+.search-btn:active { transform: scale(0.98); }
+.search-btn:disabled { background: var(--border); color: var(--mid); cursor: not-allowed; transform: none; }
+
+/* ── MAIN PANEL ── */
+.main {
+  padding: 36px 36px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 80px 40px;
+  color: var(--mid);
+}
+
+.empty-state .big { font-family: var(--ff-head); font-size: 72px; line-height: 1; opacity: 0.15; }
+.empty-state p { font-size: 14px; max-width: 300px; }
+
+/* ── RESULTS HEADER ── */
+.results-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.results-header h3 {
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.results-header .count {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--mid);
+}
+
+.similar-note {
+  background: #fffbf0;
+  border: 1.5px solid #f0d27a;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: #7a5c00;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── FONT CARDS ── */
+.font-grid { display: flex; flex-direction: column; gap: 14px; }
+
+.font-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.font-card:hover { border-color: #aaa; box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+.font-card.open { border-color: var(--accent2); }
+
+.font-card-header {
+  background: var(--surface);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.font-card-left { display: flex; flex-direction: column; gap: 3px; }
+
+.font-name {
+  font-family: var(--ff-head);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.font-meta { display: flex; gap: 8px; align-items: center; }
+
+.font-cat {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  font-family: var(--ff-mono);
+}
+
+.font-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.font-tag {
+  font-size: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--mid);
+  font-family: var(--ff-mono);
+}
+
+.font-actions { display: flex; align-items: center; gap: 8px; }
+
+.guide-btn {
+  background: var(--accent2);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-family: var(--ff-body);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.guide-btn:hover { background: #1d4ed8; }
+.guide-btn.open-guide { background: var(--ink); }
+
+.preview-area {
+  padding: 28px 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  min-height: 80px;
+  word-break: break-word;
+  line-height: 1.2;
+  transition: background 0.15s, color 0.15s;
+}
+
+/* ── IMPORT GUIDE PANEL ── */
+.import-guide {
+  display: none;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 28px 28px 24px;
+  border-top: 2px solid var(--accent2);
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.import-guide.visible { display: block; }
+
+.import-guide h4 {
+  font-family: var(--ff-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: #93c5fd;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.guide-section { margin-bottom: 22px; }
+
+.guide-section-title {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.code-block {
+  background: #0d0d0e;
+  border: 1px solid #2d2d30;
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  font-family: var(--ff-mono);
+  font-size: 12.5px;
+  color: var(--code-fg);
+  white-space: pre;
+  line-height: 1.6;
+}
+
+.code-kw  { color: #f97316; }
+.code-str { color: #86efac; }
+.code-com { color: #6b7280; font-style: italic; }
+.code-sel { color: #93c5fd; }
+.code-prop{ color: #fde68a; }
+.code-val { color: #c4b5fd; }
+
+.copy-code-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: #2d2d30;
+  border: none;
+  border-radius: 5px;
+  color: #9ca3af;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.copy-code-btn:hover { background: var(--accent2); color: #fff; }
+
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.do-block, .dont-block {
+  border-radius: 7px;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.do-block {
+  background: #052e16;
+  border: 1px solid #166534;
+}
+
+.dont-block {
+  background: #2d0a04;
+  border: 1px solid #7f1d1d;
+}
+
+.do-block .label  { color: #86efac; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.dont-block .label{ color: #fca5a5; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+.do-block ul, .dont-block ul { list-style: none; display: flex; flex-direction: column; gap: 5px; color: #d1d5db; }
+.do-block li::before   { content: '✓  '; color: #4ade80; }
+.dont-block li::before { content: '✗  '; color: #f87171; }
+
+/* ── FOOTER CREDIT ── */
+.credit-bar {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 18px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--mid);
+}
+
+.credit-bar a { color: var(--accent2); text-decoration: none; }
+.credit-bar a:hover { text-decoration: underline; }
+
+.credit-gf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gf-logo {
+  font-family: var(--ff-head);
+  font-size: 13px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ea4335, #fbbc04, #34a853, #4285f4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── SPINNER ── */
+.spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">Font<span>X</span></div>
+  <div class="gf-badge">
+    All fonts served by
+    <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts API</a>
+    — free &amp; open source
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; min-height:calc(100vh - 52px);">
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <h2>Find your<br><em>perfect</em> font.</h2>
+      <br>
+      <p class="sidebar-desc">Pick vibes, set size &amp; weight, get matches.</p>
+    </div>
+
+    <!-- VIBE CHECKBOXES -->
+    <div class="field">
+      <div class="field-label">What kind of font?</div>
+      <div class="checkbox-grid" id="vibe-grid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- CATEGORY -->
+    <div class="field">
+      <div class="field-label">Category</div>
+      <div class="pills" id="cat-pills">
+        <span class="pill active" data-v="all">Any</span>
+        <span class="pill" data-v="serif">Serif</span>
+        <span class="pill" data-v="sans-serif">Sans-serif</span>
+        <span class="pill" data-v="display">Display</span>
+        <span class="pill" data-v="handwriting">Handwriting</span>
+        <span class="pill" data-v="monospace">Monospace</span>
+      </div>
+    </div>
+
+    <!-- PREVIEW TEXT -->
+    <div class="field">
+      <div class="field-label">Preview text</div>
+      <textarea class="text-input" id="preview-text">The quick brown fox jumps over the lazy dog.</textarea>
+    </div>
+
+    <!-- SIZE -->
+    <div class="field">
+      <div class="field-label">Size</div>
+      <div class="range-wrap">
+        <input type="range" id="size" min="14" max="96" value="48">
+        <span class="range-val" id="size-val">48px</span>
+      </div>
+    </div>
+
+    <!-- WEIGHT -->
+    <div class="field">
+      <div class="field-label">Weight</div>
+      <div class="pills" id="weight-pills">
+        <span class="pill" data-v="100">Thin</span>
+        <span class="pill" data-v="300">Light</span>
+        <span class="pill active" data-v="400">Regular</span>
+        <span class="pill" data-v="700">Bold</span>
+        <span class="pill" data-v="900">Black</span>
+      </div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="field">
+      <div class="field-label">Preview colors</div>
+      <div class="color-row">
+        <div class="color-swatch-wrap">
+          <input type="color" id="text-color" value="#1a1814">
+          <span>Text</span>
+        </div>
+        <div class="color-swatch-wrap">
+          <input type="color" id="bg-color" value="#ffffff">
+          <span>Background</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="search-btn" id="search-btn">Find Fonts</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+    <div class="empty-state" id="empty-state">
+      <div class="big">Aa</div>
+      <p>Select some vibes on the left and hit <strong>Find Fonts</strong> to explore Google Fonts.</p>
+    </div>
+    <div id="results-wrap" style="display:none">
+      <div class="results-header">
+        <h3 id="results-title">Results</h3>
+        <span class="count" id="results-count"></span>
+      </div>
+      <div class="similar-note" id="similar-note" style="display:none">
+        ⚠ No exact match for your selection — showing closest alternatives instead.
+      </div>
+      <div class="font-grid" id="font-grid"></div>
+    </div>
+  </main>
+
+</div>
+
+<!-- FOOTER CREDIT -->
+<div class="credit-bar">
+  <div class="credit-gf">
+    <span class="gf-logo">Google Fonts</span>
+    <span>All fonts on this page — including the UI itself — are loaded via the <a href="https://developers.google.com/fonts/docs/getting_started" target="_blank" rel="noopener">Google Fonts API</a>. Free, fast, and open source.</span>
+  </div>
+  <span>UI fonts: Syne · Instrument Sans · JetBrains Mono</span>
+</div>
+</div>
+
+<script>
+// ── VIBES ──────────────────────────────────────────────────────────────────
+const VIBES = [
+  { id: 'playful',     label: '🎈 Playful'     },
+  { id: 'elegant',     label: '🌸 Elegant'     },
+  { id: 'bold',        label: '💪 Bold'        },
+  { id: 'minimal',     label: '◻ Minimal'      },
+  { id: 'retro',       label: '📼 Retro'       },
+  { id: 'futuristic',  label: '🚀 Futuristic'  },
+  { id: 'handwritten', label: '✍ Handwritten'  },
+  { id: 'techy',       label: '💻 Techy'       },
+  { id: 'editorial',   label: '📰 Editorial'   },
+  { id: 'cute',        label: '🐣 Cute'        },
+  { id: 'luxury',      label: '✨ Luxury'      },
+  { id: 'readable',    label: '📖 Readable'    },
+];
+
+// ── FONT DATABASE ──────────────────────────────────────────────────────────
+const FONTS = [
+  { name:'Outfit',            cat:'sans-serif',  tags:['minimal','techy','modern','editorial'] },
+  { name:'Plus Jakarta Sans', cat:'sans-serif',  tags:['techy','minimal','editorial'] },
+  { name:'Nunito',            cat:'sans-serif',  tags:['playful','cute','rounded','readable'] },
+  { name:'Poppins',           cat:'sans-serif',  tags:['minimal','modern','readable'] },
+  { name:'Raleway',           cat:'sans-serif',  tags:['elegant','minimal','luxury'] },
+  { name:'Josefin Sans',      cat:'sans-serif',  tags:['elegant','minimal','luxury','retro'] },
+  { name:'Quicksand',         cat:'sans-serif',  tags:['playful','cute','rounded'] },
+  { name:'Exo 2',             cat:'sans-serif',  tags:['futuristic','techy','bold'] },
+  { name:'Kanit',             cat:'sans-serif',  tags:['bold','editorial'] },
+  { name:'Sora',              cat:'sans-serif',  tags:['minimal','techy'] },
+  { name:'Lexend',            cat:'sans-serif',  tags:['readable','minimal'] },
+  { name:'Bebas Neue',        cat:'display',     tags:['bold','editorial','retro'] },
+  { name:'Playfair Display',  cat:'serif',       tags:['elegant','editorial','luxury'] },
+  { name:'Cormorant Garamond',cat:'serif',       tags:['elegant','luxury','minimal'] },
+  { name:'Lora',              cat:'serif',       tags:['readable','editorial','elegant'] },
+  { name:'Libre Baskerville', cat:'serif',       tags:['readable','editorial'] },
+  { name:'Merriweather',      cat:'serif',       tags:['readable','bold'] },
+  { name:'EB Garamond',       cat:'serif',       tags:['elegant','editorial','luxury'] },
+  { name:'Spectral',          cat:'serif',       tags:['editorial','minimal'] },
+  { name:'DM Serif Display',  cat:'serif',       tags:['editorial','elegant','bold'] },
+  { name:'Bodoni Moda',       cat:'serif',       tags:['luxury','elegant','bold','editorial'] },
+  { name:'Abril Fatface',     cat:'display',     tags:['bold','editorial','retro'] },
+  { name:'Fraunces',          cat:'serif',       tags:['retro','elegant','playful'] },
+  { name:'Cinzel',            cat:'display',     tags:['elegant','luxury','bold'] },
+  { name:'Pacifico',          cat:'display',     tags:['playful','retro','handwritten'] },
+  { name:'Lobster',           cat:'display',     tags:['retro','bold','playful'] },
+  { name:'Righteous',         cat:'display',     tags:['retro','bold','techy'] },
+  { name:'Bungee',            cat:'display',     tags:['bold','retro','editorial'] },
+  { name:'Titan One',         cat:'display',     tags:['bold','playful','cute'] },
+  { name:'Fredoka One',       cat:'display',     tags:['cute','playful','rounded'] },
+  { name:'Lilita One',        cat:'display',     tags:['bold','playful','cute'] },
+  { name:'Orbitron',          cat:'display',     tags:['futuristic','techy','bold'] },
+  { name:'Audiowide',         cat:'display',     tags:['futuristic','techy'] },
+  { name:'Russo One',         cat:'display',     tags:['bold','techy','futuristic'] },
+  { name:'Press Start 2P',    cat:'display',     tags:['retro','techy','playful'] },
+  { name:'VT323',             cat:'monospace',   tags:['retro','techy','futuristic'] },
+  { name:'Creepster',         cat:'display',     tags:['bold','playful','retro'] },
+  { name:'Poiret One',        cat:'display',     tags:['elegant','minimal','retro','luxury'] },
+  { name:'Comfortaa',         cat:'display',     tags:['cute','rounded','playful','readable'] },
+  { name:'Permanent Marker',  cat:'handwriting', tags:['handwritten','bold','playful'] },
+  { name:'Satisfy',           cat:'handwriting', tags:['elegant','handwritten','luxury'] },
+  { name:'Dancing Script',    cat:'handwriting', tags:['handwritten','playful','cute'] },
+  { name:'Caveat',            cat:'handwriting', tags:['handwritten','playful','minimal'] },
+  { name:'Indie Flower',      cat:'handwriting', tags:['handwritten','cute','playful'] },
+  { name:'Sacramento',        cat:'handwriting', tags:['elegant','handwritten','luxury'] },
+  { name:'Great Vibes',       cat:'handwriting', tags:['elegant','handwritten','luxury'] },
+  { name:'Kalam',             cat:'handwriting', tags:['handwritten','readable','playful'] },
+  { name:'JetBrains Mono',    cat:'monospace',   tags:['techy','minimal','readable'] },
+  { name:'Fira Code',         cat:'monospace',   tags:['techy','minimal','readable'] },
+  { name:'Source Code Pro',   cat:'monospace',   tags:['techy','minimal','readable'] },
+  { name:'Space Mono',        cat:'monospace',   tags:['techy','retro','minimal','editorial'] },
+  { name:'Courier Prime',     cat:'monospace',   tags:['retro','readable','editorial'] },
+  { name:'Share Tech Mono',   cat:'monospace',   tags:['techy','futuristic'] },
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let selectedVibes = new Set();
+let selectedWeight = '400';
+let selectedCategory = 'all';
+let currentResults = [];
+let loadedFonts = new Set();
+
+// ── BUILD VIBE CHECKBOXES ──────────────────────────────────────────────────
+const vibeGrid = document.getElementById('vibe-grid');
+VIBES.forEach(v => {
+  const label = document.createElement('label');
+  label.className = 'cb-item';
+  label.innerHTML = `
+    <input type="checkbox" value="${v.id}">
+    <span class="cb-box"></span>
+    <span class="cb-text">${v.label}</span>`;
+  label.querySelector('input').addEventListener('change', e => {
+    if (e.target.checked) selectedVibes.add(v.id);
+    else selectedVibes.delete(v.id);
+  });
+  vibeGrid.appendChild(label);
+});
+
+// ── CATEGORY PILLS ─────────────────────────────────────────────────────────
+document.querySelectorAll('#cat-pills .pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('#cat-pills .pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    selectedCategory = p.dataset.v;
+  });
+});
+
+// ── WEIGHT PILLS ───────────────────────────────────────────────────────────
+document.querySelectorAll('#weight-pills .pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('#weight-pills .pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    selectedWeight = p.dataset.v;
+    rerenderPreviews();
+  });
+});
+
+// ── RANGE ──────────────────────────────────────────────────────────────────
+const sizeInput = document.getElementById('size');
+const sizeVal   = document.getElementById('size-val');
+sizeInput.addEventListener('input', () => {
+  sizeVal.textContent = sizeInput.value + 'px';
+  rerenderPreviews();
+});
+
+// ── COLORS & TEXT ──────────────────────────────────────────────────────────
+document.getElementById('text-color').addEventListener('input', rerenderPreviews);
+document.getElementById('bg-color').addEventListener('input', rerenderPreviews);
+document.getElementById('preview-text').addEventListener('input', rerenderPreviews);
+
+// ── SEARCH ─────────────────────────────────────────────────────────────────
+document.getElementById('search-btn').addEventListener('click', doSearch);
+
+function score(font) {
+  if (selectedCategory !== 'all' && font.cat !== selectedCategory) return -1;
+  if (selectedVibes.size === 0) return 1;
+  let s = 0;
+  for (const v of selectedVibes) {
+    if (font.tags.includes(v)) s++;
+  }
+  return s;
+}
+
+async function doSearch() {
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Searching…';
+
+  const scored = FONTS
+    .map(f => ({ font: f, s: score(f) }))
+    .filter(x => x.s >= 0)
+    .sort((a, b) => b.s - a.s);
+
+  const exact    = scored.filter(x => x.s > 0).slice(0, 7);
+  const fallback = scored.slice(0, 7);
+  const noMatch  = exact.length === 0 && selectedVibes.size > 0;
+  currentResults = (noMatch ? fallback : exact).map(x => x.font);
+
+  currentResults.forEach(f => loadGFont(f.name, selectedWeight));
+  await new Promise(r => setTimeout(r, 450));
+
+  btn.disabled = false;
+  btn.textContent = 'Find Fonts';
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('results-wrap').style.display = 'block';
+  document.getElementById('similar-note').style.display = noMatch ? 'flex' : 'none';
+  document.getElementById('results-count').textContent = currentResults.length + ' fonts found';
+  document.getElementById('results-title').textContent = noMatch ? 'Similar Fonts' : 'Results';
+
+  renderCards();
+}
+
+function loadGFont(name, weight) {
+  const key = name + weight;
+  if (loadedFonts.has(key)) return;
+  loadedFonts.add(key);
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${name.replace(/ /g,'+')}:wght@${weight}&display=swap`;
+  document.head.appendChild(link);
+}
+
+// ── RENDER CARDS ───────────────────────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('font-grid');
+  grid.innerHTML = '';
+  currentResults.forEach((font, i) => {
+    grid.appendChild(buildCard(font, i));
+  });
+}
+
+function buildCard(font, idx) {
+  const card = document.createElement('div');
+  card.className = 'font-card';
+  card.dataset.idx = idx;
+
+  const previewText = document.getElementById('preview-text').value || 'The quick brown fox jumps over the lazy dog.';
+  const textColor   = document.getElementById('text-color').value;
+  const bgColor     = document.getElementById('bg-color').value;
+  const size        = sizeInput.value;
+
+  card.innerHTML = `
+    <div class="font-card-header">
+      <div class="font-card-left">
+        <div class="font-name">${font.name}</div>
+        <div class="font-meta">
+          <span class="font-cat">${font.cat}</span>
+          <div class="font-tags">${font.tags.slice(0,3).map(t=>`<span class="font-tag">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="font-actions">
+        <button class="guide-btn" data-font="${font.name}" data-cat="${font.cat}">How to use ↗</button>
+      </div>
+    </div>
+    <div class="preview-area" style="font-family:'${font.name}',${font.cat};font-size:${size}px;font-weight:${selectedWeight};color:${textColor};background:${bgColor};">${previewText}</div>
+    <div class="import-guide" id="guide-${idx}"></div>
+  `;
+
+  card.querySelector('.guide-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    toggleGuide(card, font, idx);
+  });
+
+  return card;
+}
+
+function toggleGuide(card, font, idx) {
+  const panel = card.querySelector('.import-guide');
+  const btn   = card.querySelector('.guide-btn');
+  const isOpen = panel.classList.contains('visible');
+
+  // close all
+  document.querySelectorAll('.import-guide').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.guide-btn').forEach(b => { b.textContent = 'How to use ↗'; b.classList.remove('open-guide'); });
+  document.querySelectorAll('.font-card').forEach(c => c.classList.remove('open'));
+
+  if (isOpen) return;
+
+  panel.innerHTML = buildGuideHTML(font);
+  panel.classList.add('visible');
+  btn.textContent = '✕ Close';
+  btn.classList.add('open-guide');
+  card.classList.add('open');
+
+  panel.querySelectorAll('.copy-code-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const pre = b.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        b.textContent = 'Copied!';
+        setTimeout(() => b.textContent = 'Copy', 1600);
+      });
+    });
+  });
+}
+
+function buildGuideHTML(font) {
+  const fam   = font.name.replace(/ /g, '+');
+  const name  = font.name;
+  const importUrl = `https://fonts.googleapis.com/css2?family=${fam}:wght@400;700&display=swap`;
+  const htmlSnippet =
+`&lt;!-- Paste this inside your &lt;head&gt; tag --&gt;
+&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+&lt;link href="${importUrl}" rel="stylesheet"&gt;`;
+
+  const cssImport =
+`/* At the top of your CSS file */
+@import url('${importUrl}');`;
+
+  const cssUsage =
+`/* Apply the font */
+body {
+  font-family: '${name}', ${font.cat};
+}
+
+h1, h2 {
+  font-family: '${name}', ${font.cat};
+  font-weight: 700;
+}`;
+
+  return `
+<h4>How to use "${name}"</h4>
+
+<div class="guide-section">
+  <div class="guide-section-title">⚡ Quick drop-in (paste into &lt;head&gt;)</div>
+  <div class="code-block">
+    <pre>${htmlSnippet}</pre>
+    <button class="copy-code-btn">Copy</button>
+  </div>
+</div>
+
+<div class="guide-section">
+  <div class="guide-section-title">Alternative — CSS @import</div>
+  <div class="code-block">
+    <pre>${cssImport}</pre>
+    <button class="copy-code-btn">Copy</button>
+  </div>
+</div>
+
+<div class="guide-section">
+  <div class="guide-section-title">Use it in CSS</div>
+  <div class="code-block">
+    <pre>${cssUsage}</pre>
+    <button class="copy-code-btn">Copy</button>
+  </div>
+</div>
+
+<div class="guide-section">
+  <div class="do-dont">
+    <div class="do-block">
+      <div class="label">✅ Do</div>
+      <ul>
+        <li>Use <code>preconnect</code> hints — speeds up font loading</li>
+        <li>Add <code>display=swap</code> — text stays visible while loading</li>
+        <li>Load only the weights you actually use</li>
+        <li>Use the fallback font (${font.cat}) as second value</li>
+      </ul>
+    </div>
+    <div class="dont-block">
+      <div class="label">❌ Don't</div>
+      <ul>
+        <li>Load every weight (100–900) if you only need one</li>
+        <li>Use <code>@import</code> inside a <code>&lt;style&gt;</code> tag — it blocks rendering</li>
+        <li>Forget the fallback — always include the generic family</li>
+        <li>Self-host unless you really need to — Google CDN is fast</li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+}
+
+// ── RERENDER PREVIEWS ON CHANGE ────────────────────────────────────────────
+function rerenderPreviews() {
+  if (!currentResults.length) return;
+  const text      = document.getElementById('preview-text').value || 'The quick brown fox…';
+  const textColor = document.getElementById('text-color').value;
+  const bgColor   = document.getElementById('bg-color').value;
+  const size      = sizeInput.value;
+
+  document.querySelectorAll('.preview-area').forEach((el, i) => {
+    const f = currentResults[i];
+    if (!f) return;
+    loadGFont(f.name, selectedWeight);
+    el.style.fontFamily  = `'${f.name}', ${f.cat}`;
+    el.style.fontSize    = size + 'px';
+    el.style.fontWeight  = selectedWeight;
+    el.style.color       = textColor;
+    el.style.background  = bgColor;
+    el.textContent       = text;
+  });
+}
+</script>
+</body>
+</html>
