@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>robots.txt Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0c0f;
+    --surface: #13151a;
+    --surface2: #1c1f27;
+    --border: #2a2e3a;
+    --accent: #ff4d4d;
+    --accent2: #ff8c42;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --green: #4ade80;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  /* ── Header ── */
+  header {
+    grid-column: 1 / -1;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+  }
+
+  header .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  header .logo span { color: var(--accent); }
+
+  header .badge {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  header p {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* ── Left panel ── */
+  .panel {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    font-family: var(--mono);
+  }
+
+  /* Search */
+  .search-box {
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-box input:focus { border-color: var(--accent); }
+
+  .search-box::before {
+    content: '⌕';
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  /* Bot categories */
+  .bot-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .group-title .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .group-actions {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .group-actions button {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .group-actions button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .bot-items { padding-left: 0.5rem; }
+
+  .bot-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 3px;
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  .bot-item:hover { background: var(--surface2); }
+  .bot-item.filtered { display: none; }
+
+  .bot-item input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 14px; height: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .bot-item label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text);
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .bot-item .bot-ua {
+    font-size: 0.6rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* Global actions */
+  .global-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+  .btn.primary:hover { background: #e63c3c; }
+
+  /* Custom UA */
+  .custom-ua-area { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .custom-ua-area input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .custom-ua-area input:focus { border-color: var(--accent2); }
+
+  .custom-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    color: var(--accent2);
+  }
+
+  .tag button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .tag button:hover { color: var(--accent); }
+
+  /* ── Right panel ── */
+  .output-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .output-title {
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .output-title .count {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 7px;
+    border-radius: 10px;
+    color: var(--accent);
+  }
+
+  .output-actions { display: flex; gap: 0.5rem; }
+
+  .output-actions button {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .output-actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .output-actions button.copied { border-color: var(--green); color: var(--green); }
+
+  /* Options row */
+  .options-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .opt input[type="checkbox"] { accent-color: var(--accent2); cursor: pointer; }
+  .opt:hover { color: var(--text); }
+
+  .opt-text-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .opt-text-group input[type="text"] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    outline: none;
+    width: 160px;
+    transition: border-color 0.15s;
+  }
+
+  .opt-text-group input:focus { border-color: var(--accent2); }
+
+  /* Code output */
+  .code-wrapper {
+    flex: 1;
+    position: relative;
+    min-height: 200px;
+  }
+
+  .code-output {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: #b4c9e8;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    padding: 1rem 1.25rem;
+    resize: none;
+    outline: none;
+    overflow-y: auto;
+    transition: border-color 0.15s;
+  }
+
+  .code-output:focus { border-color: var(--border); }
+
+  /* Syntax highlighting in pre/div */
+  .code-rendered {
+    width: 100%;
+    flex: 1;
+    min-height: 400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+    white-space: pre;
+    cursor: text;
+  }
+
+  .line-comment { color: #636e82; }
+  .line-directive { color: var(--accent); font-weight: 700; }
+  .line-ua { color: #7dd3fc; }
+  .line-value { color: #a3e635; }
+  .line-blank { color: transparent; }
+  .line-sitemap { color: var(--accent2); }
+  .line-crawldelay { color: #e2b96a; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+
+  .stat { display: flex; align-items: center; gap: 0.35rem; }
+  .stat strong { color: var(--text); }
+  .stat .dot-green { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .stat .dot-red { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    body { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; }
+    .panel { border-right: none; border-bottom: 1px solid var(--border); max-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">robots<span>.txt</span></div>
+  <span class="badge">Generator</span>
+  <p>block crawlers · protect your site</p>
+</header>
+
+<!-- LEFT: bot picker -->
+<aside class="panel" id="panel">
+  <div>
+    <div class="section-label">Global</div>
+    <div class="global-actions">
+      <button class="btn" onclick="selectAll()">Select All</button>
+      <button class="btn" onclick="deselectAll()">Deselect All</button>
+      <button class="btn primary" onclick="generate()">Generate ↓</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label">Search bots</div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="filter by name or UA…" oninput="filterBots(this.value)">
+    </div>
+  </div>
+
+  <div id="bot-list">
+    <!-- Generated by JS -->
+  </div>
+
+  <div>
+    <div class="section-label">Custom User-Agents</div>
+    <div class="custom-ua-area">
+      <input type="text" id="custom-ua-input" placeholder="e.g. BadBot/1.0" onkeydown="if(event.key==='Enter')addCustomUA()">
+      <button class="btn" onclick="addCustomUA()">+ Add</button>
+      <div class="custom-tags" id="custom-tags"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- RIGHT: output -->
+<main class="output-panel">
+  <div class="output-header">
+    <div class="output-title">
+      Generated robots.txt
+      <span class="count" id="bot-count">0 bots blocked</span>
+    </div>
+    <div class="output-actions">
+      <button onclick="copyOutput(this)">📋 Copy</button>
+      <button onclick="downloadOutput()">⬇ Download</button>
+    </div>
+  </div>
+
+  <div class="options-row">
+    <label class="opt">
+      <input type="checkbox" id="opt-disallow-all" checked onchange="generate()"> Disallow all paths
+    </label>
+    <label class="opt">
+      <input type="checkbox" id="opt-crawl-delay" onchange="generate()"> Crawl-delay
+    </label>
+    <label class="opt">
+      <input type="checkbox" id="opt-allow-google" onchange="generate()"> Keep Googlebot
+    </label>
+    <label class="opt">
+      <input type="checkbox" id="opt-comments" checked onchange="generate()"> Comments
+    </label>
+    <div class="opt-text-group">
+      Sitemap:
+      <input type="text" id="opt-sitemap" placeholder="https://yoursite.com/sitemap.xml" oninput="generate()">
+    </div>
+  </div>
+
+  <div class="code-rendered" id="output-rendered"></div>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat"><span class="dot-red"></span> <strong id="s-blocked">0</strong> agents blocked</div>
+    <div class="stat"><span class="dot-green"></span> <strong id="s-allowed">0</strong> agents allowed</div>
+    <div class="stat">Lines: <strong id="s-lines">0</strong></div>
+    <div class="stat">Size: <strong id="s-size">0 B</strong></div>
+  </div>
+</main>
+
+<script>
+// ── Bot database ──────────────────────────────────────────────────────────────
+const BOT_GROUPS = [
+  {
+    name: "CLI / Download tools",
+    color: "#ff4d4d",
+    bots: [
+      { name: "wget",          ua: "Wget"                   },
+      { name: "curl",          ua: "curl"                   },
+      { name: "HTTrack",       ua: "HTTrack"                },
+      { name: "WHTT",          ua: "WHTT"                   },
+      { name: "WebCopier",     ua: "WebCopier"              },
+      { name: "Teleport Pro",  ua: "Teleport"               },
+      { name: "WebZIP",        ua: "WebZIP"                 },
+      { name: "Offline Explorer", ua: "Offline Explorer"   },
+      { name: "WebStripper",   ua: "WebStripper"            },
+      { name: "SiteSucker",    ua: "SiteSucker"             },
+      { name: "Mass Downloader",ua: "Mass Downloader"       },
+      { name: "GetRight",      ua: "GetRight"               },
+      { name: "Go!Zilla",      ua: "Go!Zilla"               },
+      { name: "Pavuk",         ua: "Pavuk"                  },
+      { name: "WebMirror",     ua: "WebMirror"              },
+      { name: "NetAttachePro", ua: "NetAttachePro"          },
+      { name: "Xenu Link Sleuth", ua: "Xenu Link Sleuth"   },
+    ],
+  },
+  {
+    name: "Python / HTTP libs",
+    color: "#ff8c42",
+    bots: [
+      { name: "python-requests", ua: "python-requests"     },
+      { name: "python-urllib",   ua: "Python-urllib"       },
+      { name: "Scrapy",          ua: "Scrapy"              },
+      { name: "httpx",           ua: "python-httpx"        },
+      { name: "aiohttp",         ua: "aiohttp"             },
+      { name: "urllib3",         ua: "urllib3"             },
+    ],
+  },
+  {
+    name: "Java / JVM",
+    color: "#e2b96a",
+    bots: [
+      { name: "Java (generic)", ua: "Java"                  },
+      { name: "Jakarta Commons",ua: "Jakarta Commons"       },
+      { name: "Apache HttpClient",ua:"Apache-HttpClient"   },
+      { name: "OkHttp",         ua: "okhttp"               },
+    ],
+  },
+  {
+    name: "Go / Ruby / PHP",
+    color: "#a78bfa",
+    bots: [
+      { name: "Go HTTP client", ua: "Go-http-client"       },
+      { name: "Ruby Net::HTTP", ua: "Ruby"                 },
+      { name: "PHP (generic)",  ua: "PHP"                  },
+      { name: "libwww-perl",    ua: "libwww-perl"          },
+    ],
+  },
+  {
+    name: "Headless Browsers",
+    color: "#f472b6",
+    bots: [
+      { name: "Puppeteer",      ua: "HeadlessChrome"       },
+      { name: "Playwright",     ua: "Playwright"           },
+      { name: "PhantomJS",      ua: "PhantomJS"            },
+      { name: "Selenium",       ua: "Selenium"             },
+      { name: "SlimerJS",       ua: "SlimerJS"             },
+    ],
+  },
+  {
+    name: "SEO / Analysis",
+    color: "#34d399",
+    bots: [
+      { name: "Ahrefs",         ua: "AhrefsBot"            },
+      { name: "SEMrush",        ua: "SemrushBot"           },
+      { name: "Moz",            ua: "rogerbot"             },
+      { name: "Majestic",       ua: "MJ12bot"              },
+      { name: "DotBot",         ua: "DotBot"               },
+      { name: "SiteAuditBot",   ua: "SiteAuditBot"         },
+      { name: "Bytespider",     ua: "Bytespider"           },
+      { name: "DataForSeo",     ua: "DataForSeoBot"        },
+      { name: "Netcraft",       ua: "Netcraft"             },
+    ],
+  },
+  {
+    name: "AI / LLM Scrapers",
+    color: "#60a5fa",
+    bots: [
+      { name: "GPTBot (OpenAI)",    ua: "GPTBot"           },
+      { name: "ChatGPT-User",       ua: "ChatGPT-User"     },
+      { name: "CCBot (Common Crawl)",ua:"CCBot"            },
+      { name: "anthropic-ai",       ua: "anthropic-ai"     },
+      { name: "ClaudeBot",          ua: "ClaudeBot"        },
+      { name: "Google-Extended",    ua: "Google-Extended"  },
+      { name: "FacebookBot",        ua: "FacebookBot"      },
+      { name: "Applebot-Extended",  ua: "Applebot-Extended"},
+      { name: "Amazonbot",          ua: "Amazonbot"        },
+      { name: "Omgilibot",          ua: "Omgilibot"        },
+      { name: "PerplexityBot",      ua: "PerplexityBot"    },
+    ],
+  },
+  {
+    name: "Generic Crawlers",
+    color: "#f87171",
+    bots: [
+      { name: "Nutch",          ua: "Nutch"                },
+      { name: "Wget (alt UA)",  ua: "LWP-simple"           },
+      { name: "WebFetch",       ua: "WebFetch"             },
+      { name: "GrabNet",        ua: "GrabNet"              },
+      { name: "Harvest",        ua: "Harvest"              },
+      { name: "WebSite-X5",     ua: "WebSite-X5"           },
+      { name: "Webinator",      ua: "Webinator"            },
+      { name: "SpidersBot",     ua: "spiderman"            },
+      { name: "ArchiveBot",     ua: "ArchiveTeam"          },
+    ],
+  },
+  {
+    name: "Perf / Monitoring",
+    color: "#94a3b8",
+    bots: [
+      { name: "Netpeek",        ua: "Netpeek"              },
+      { name: "CheckMarkNetwork",ua:"CheckMarkNetwork"     },
+      { name: "BLEXBot",        ua: "BLEXBot"              },
+      { name: "PetalBot",       ua: "PetalBot"             },
+    ],
+  },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const checked = new Set();
+const customUAs = [];
+
+// ── Build sidebar ─────────────────────────────────────────────────────────────
+function buildList() {
+  const container = document.getElementById("bot-list");
+  container.innerHTML = "";
+
+  BOT_GROUPS.forEach((group, gi) => {
+    const section = document.createElement("div");
+    section.className = "bot-group";
+    section.innerHTML = `
+      <div class="group-header">
+        <div class="group-title">
+          <span class="dot" style="background:${group.color}"></span>
+          ${group.name}
+        </div>
+        <div class="group-actions">
+          <button onclick="selectGroup(${gi})">All</button>
+          <button onclick="deselectGroup(${gi})">None</button>
+        </div>
+      </div>
+      <div class="bot-items" id="group-${gi}"></div>
+    `;
+    const items = section.querySelector(`#group-${gi}`);
+    group.bots.forEach((bot, bi) => {
+      const id = `bot-${gi}-${bi}`;
+      const div = document.createElement("div");
+      div.className = "bot-item";
+      div.dataset.name = bot.name.toLowerCase();
+      div.dataset.ua   = bot.ua.toLowerCase();
+      div.innerHTML = `
+        <input type="checkbox" id="${id}" data-ua="${bot.ua}" onchange="toggle('${bot.ua}', this.checked)">
+        <label for="${id}">${bot.name}</label>
+        <span class="bot-ua">${bot.ua}</span>
+      `;
+      items.appendChild(div);
+    });
+    container.appendChild(section);
+  });
+}
+
+function toggle(ua, on) {
+  on ? checked.add(ua) : checked.delete(ua);
+  generate();
+}
+
+function selectGroup(gi) {
+  BOT_GROUPS[gi].bots.forEach((b, bi) => {
+    checked.add(b.ua);
+    const el = document.getElementById(`bot-${gi}-${bi}`);
+    if (el) el.checked = true;
+  });
+  generate();
+}
+
+function deselectGroup(gi) {
+  BOT_GROUPS[gi].bots.forEach((b, bi) => {
+    checked.delete(b.ua);
+    const el = document.getElementById(`bot-${gi}-${bi}`);
+    if (el) el.checked = false;
+  });
+  generate();
+}
+
+function selectAll() {
+  BOT_GROUPS.forEach((g, gi) => selectGroup(gi));
+}
+
+function deselectAll() {
+  BOT_GROUPS.forEach((g, gi) => deselectGroup(gi));
+}
+
+function filterBots(q) {
+  q = q.toLowerCase().trim();
+  document.querySelectorAll(".bot-item").forEach(el => {
+    const match = !q || el.dataset.name.includes(q) || el.dataset.ua.includes(q);
+    el.classList.toggle("filtered", !match);
+  });
+}
+
+// ── Custom UAs ────────────────────────────────────────────────────────────────
+function addCustomUA() {
+  const input = document.getElementById("custom-ua-input");
+  const val = input.value.trim();
+  if (!val || customUAs.includes(val)) return;
+  customUAs.push(val);
+  renderCustomTags();
+  input.value = "";
+  generate();
+}
+
+function removeCustomUA(ua) {
+  customUAs.splice(customUAs.indexOf(ua), 1);
+  renderCustomTags();
+  generate();
+}
+
+function renderCustomTags() {
+  const container = document.getElementById("custom-tags");
+  container.innerHTML = customUAs.map(ua =>
+    `<span class="tag">${ua}<button onclick="removeCustomUA('${ua.replace(/'/g,"\\'")}')">×</button></span>`
+  ).join("");
+}
+
+// ── Generate ──────────────────────────────────────────────────────────────────
+function generate() {
+  const disallowAll  = document.getElementById("opt-disallow-all").checked;
+  const crawlDelay   = document.getElementById("opt-crawl-delay").checked;
+  const keepGoogle   = document.getElementById("opt-allow-google").checked;
+  const comments     = document.getElementById("opt-comments").checked;
+  const sitemap      = document.getElementById("opt-sitemap").value.trim();
+
+  const allUAs = [...checked, ...customUAs];
+  const lines  = [];
+
+  const addComment = (txt) => { if (comments) lines.push(`# ${txt}`); };
+
+  addComment("robots.txt — generated by robots.txt Generator");
+  addComment(`Generated: ${new Date().toUTCString()}`);
+  if (comments) lines.push("");
+
+  if (keepGoogle) {
+    addComment("Allow Googlebot full access");
+    lines.push("User-agent: Googlebot");
+    lines.push("Allow: /");
+    if (comments) lines.push("");
+  }
+
+  allUAs.forEach(ua => {
+    lines.push(`User-agent: ${ua}`);
+    if (disallowAll) lines.push("Disallow: /");
+    if (crawlDelay)  lines.push("Crawl-delay: 86400");
+    lines.push("");
+  });
+
+  if (allUAs.length === 0 && comments) {
+    addComment("No agents selected yet — pick some from the left panel.");
+    lines.push("");
+  }
+
+  if (sitemap) {
+    addComment("Sitemap");
+    lines.push(`Sitemap: ${sitemap}`);
+    lines.push("");
+  }
+
+  renderOutput(lines);
+  updateStats(allUAs.length, keepGoogle ? 1 : 0, lines);
+}
+
+// ── Render with syntax highlighting ──────────────────────────────────────────
+function renderOutput(lines) {
+  const container = document.getElementById("output-rendered");
+  container.innerHTML = lines.map(line => {
+    if (line.startsWith("#"))           return `<span class="line-comment">${esc(line)}</span>`;
+    if (line.startsWith("User-agent:")) return `<span class="line-directive">User-agent:</span><span class="line-ua">${esc(line.slice(11))}</span>`;
+    if (line.startsWith("Disallow:"))  return `<span class="line-directive">Disallow:</span><span class="line-value">${esc(line.slice(9))}</span>`;
+    if (line.startsWith("Allow:"))     return `<span class="line-directive">Allow:</span><span class="line-value">${esc(line.slice(6))}</span>`;
+    if (line.startsWith("Crawl-delay:")) return `<span class="line-crawldelay">${esc(line)}</span>`;
+    if (line.startsWith("Sitemap:"))   return `<span class="line-sitemap">${esc(line)}</span>`;
+    if (line === "")                   return `<span class="line-blank"> </span>`;
+    return `<span>${esc(line)}</span>`;
+  }).join("\n");
+
+  const allUAs = [...checked, ...customUAs];
+  document.getElementById("bot-count").textContent = `${allUAs.length} bots blocked`;
+}
+
+function esc(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function updateStats(blocked, allowed, lines) {
+  document.getElementById("s-blocked").textContent = blocked;
+  document.getElementById("s-allowed").textContent = allowed;
+  document.getElementById("s-lines").textContent   = lines.length;
+  const bytes = lines.join("\n").length;
+  document.getElementById("s-size").textContent    = bytes < 1024 ? `${bytes} B` : `${(bytes/1024).toFixed(1)} KB`;
+}
+
+// ── Copy / Download ───────────────────────────────────────────────────────────
+function getRaw() {
+  const rendered = document.getElementById("output-rendered");
+  return rendered.innerText;
+}
+
+async function copyOutput(btn) {
+  await navigator.clipboard.writeText(getRaw());
+  btn.textContent = "✓ Copied!";
+  btn.classList.add("copied");
+  setTimeout(() => { btn.textContent = "📋 Copy"; btn.classList.remove("copied"); }, 1800);
+}
+
+function downloadOutput() {
+  const blob = new Blob([getRaw()], { type: "text/plain" });
+  const a    = document.createElement("a");
+  a.href     = URL.createObjectURL(blob);
+  a.download = "robots.txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildList();
+generate();
+</script>
+</body>
+</html>
