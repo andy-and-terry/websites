@@ -1,0 +1,4 @@
+[
+  { "id": "1", "src": "../assets/img/photo1.jpg", "description": "sunset over mountains" },
+  { "id": "2", "src": "../img/photo2.jpg", "description": "city skyline at night" }
+]
