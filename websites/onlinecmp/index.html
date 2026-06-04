@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compressor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #111; color: #eee; padding: 1rem; max-width: 480px; margin: auto; }
+h1 { font-size: 18px; font-weight: 600; margin-bottom: 1rem; }
+.zone { border: 1px dashed #444; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; margin-bottom: 1rem; }
+.zone p { font-size: 14px; color: #aaa; margin-top: 6px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 1rem 0; }
+.stat { background: #222; border-radius: 8px; padding: 12px; }
+.stat label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+.stat span { font-size: 18px; font-weight: 600; }
+button { width: 100%; padding: 12px; margin-top: 1rem; background: #eee; color: #111; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+button:disabled { background: #333; color: #666; cursor: default; }
+#progress { display: none; margin-top: 1rem; font-size: 13px; color: #888; }
+.bar-bg { height: 4px; background: #333; border-radius: 2px; margin-top: 6px; }
+.bar-fill { height: 4px; background: #eee; border-radius: 2px; width: 0%; transition: width 0.2s; }
+#result { display: none; margin-top: 1.5rem; background: #222; border-radius: 8px; padding: 1rem; font-size: 13px; }
+#result p { margin-bottom: 6px; color: #aaa; }
+#result strong { color: #eee; }
+</style>
+</head>
+<body>
+<h1>Compressor</h1>
+
+<div class="zone" onclick="document.getElementById('dict-input').click()">
+  <div style="font-size:28px">📖</div>
+  <p>Tap to load dictionary.json</p>
+  <p id="dict-status" style="font-size:12px;color:#666;margin-top:4px">No dictionary loaded</p>
+  <input id="dict-input" type="file" accept=".json" style="display:none">
+</div>
+
+<div class="zone" onclick="document.getElementById('fi').click()">
+  <div style="font-size:28px">📂</div>
+  <p>Tap to select files to compress</p>
+  <p style="font-size:12px">Any file type — outputs filename.cmp</p>
+  <input id="fi" type="file" multiple style="display:none">
+</div>
+
+<div class="stats">
+  <div class="stat"><label>Files</label><span id="s-files">0</span></div>
+  <div class="stat"><label>Total size</label><span id="s-bytes">0</span></div>
+  <div class="stat"><label>Dict entries</label><span id="s-dict">0</span></div>
+</div>
+
+<button type="button" id="compress-btn" onclick="compress()" disabled>Compress</button>
+
+<div id="progress">
+  <span id="prog-text"></span>
+  <div class="bar-bg"><div class="bar-fill" id="bar"></div></div>
+</div>
+
+<div id="result">
+  <p>Original: <strong id="r-orig">-</strong></p>
+  <p>Compressed: <strong id="r-comp">-</strong></p>
+  <p>Saved: <strong id="r-ratio">-</strong></p>
+</div>
+
+<script>
+let dictionary = null;
+let selectedFiles = [];
+
+// ── Dictionary ────────────────────────────────────────────────────────────────
+document.getElementById('dict-input').onchange = async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    dictionary = JSON.parse(await f.text());
+    document.getElementById('dict-status').textContent = `✓ ${f.name} (${Object.keys(dictionary).length} entries)`;
+    document.getElementById('s-dict').textContent = Object.keys(dictionary).length;
+    checkReady();
+  } catch { alert('Invalid JSON'); }
+};
+
+// ── File select ───────────────────────────────────────────────────────────────
+document.getElementById('fi').onchange = () => {
+  selectedFiles = Array.from(document.getElementById('fi').files);
+  document.getElementById('s-files').textContent = selectedFiles.length;
+  const total = selectedFiles.reduce((s, f) => s + f.size, 0);
+  document.getElementById('s-bytes').textContent =
+    total > 1048576 ? (total/1048576).toFixed(1)+'MB' : Math.round(total/1024)+'KB';
+  checkReady();
+};
+
+function checkReady() {
+  document.getElementById('compress-btn').disabled = !(dictionary && selectedFiles.length);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function hexToBytes(hex) {
+  const arr = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < arr.length; i++)
+    arr[i] = parseInt(hex.slice(i*2, i*2+2), 16);
+  return arr;
+}
+
+function fmtSize(n) {
+  if (n > 1048576) return (n/1048576).toFixed(1)+'MB';
+  if (n > 1024) return Math.round(n/1024)+'KB';
+  return n+'B';
+}
+
+function download(name, text) {
+  const blob = new Blob([text], { type: 'application/octet-stream' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+// ── Compress ──────────────────────────────────────────────────────────────────
+async function compress() {
+  document.getElementById('compress-btn').disabled = true;
+  document.getElementById('progress').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+
+  const bar = document.getElementById('bar');
+  const progText = document.getElementById('prog-text');
+
+  // Build sorted entries once: longest seq first for greedy match
+  const entries = Object.entries(dictionary).map(([hex, code]) => ({
+    seq: hexToBytes(hex),
+    code
+  })).sort((a, b) => b.seq.length - a.seq.length);
+
+  let totalOrig = 0, totalComp = 0;
+
+  for (let fi = 0; fi < selectedFiles.length; fi++) {
+    const file = selectedFiles[fi];
+    progText.textContent = `Compressing ${fi+1}/${selectedFiles.length}: ${file.name}`;
+    await new Promise(r => setTimeout(r, 0));
+
+    const data = new Uint8Array(await file.arrayBuffer());
+    totalOrig += data.length;
+
+    let result = '';
+    let i = 0;
+    while (i < data.length) {
+      let matched = false;
+      for (const entry of entries) {
+        if (i + entry.seq.length > data.length) continue;
+        let match = true;
+        for (let j = 0; j < entry.seq.length; j++) {
+          if (data[i + j] !== entry.seq[j]) { match = false; break; }
+        }
+        if (match) {
+          result += '[' + entry.code + ']';
+          i += entry.seq.length;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        result += data[i].toString(16).padStart(2, '0');
+        i++;
+      }
+      if (i % 20000 === 0) {
+        bar.style.width = Math.round(((fi + i/data.length) / selectedFiles.length) * 100) + '%';
+        await new Promise(r => setTimeout(r, 0));
+      }
+    }
+
+    totalComp += result.length;
+
+    // Output: filename.cmp (strip original extension, add .cmp)
+    const baseName = file.name.replace(/\.[^/.]+$/, '') || file.name;
+    download(baseName + '.cmp', result);
+
+    bar.style.width = Math.round((fi+1)/selectedFiles.length*100) + '%';
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  document.getElementById('r-orig').textContent = fmtSize(totalOrig);
+  document.getElementById('r-comp').textContent = fmtSize(totalComp);
+  document.getElementById('r-ratio').textContent = ((1 - totalComp/totalOrig)*100).toFixed(1) + '% smaller';
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('progress').style.display = 'none';
+  document.getElementById('compress-btn').disabled = false;
+}
+</script>
+</body>
+</html>
