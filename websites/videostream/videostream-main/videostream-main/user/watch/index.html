@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VideoStream – Watch</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="brand" href="../index.html">VideoStream</a>
+  <div class="nav-right">
+    <a class="btn btn-secondary" href="../../logout.html">Logout</a>
+  </div>
+</nav>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Video player (shown when watchid is valid) -->
+    <div class="watch-container" id="player-section" hidden>
+      <div class="watch-header">
+        <a class="btn btn-secondary" href="../index.html">&#8592; Back to browse</a>
+      </div>
+      <div class="video-wrapper">
+        <video id="video-player" controls autoplay playsinline>
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <!-- Error state (shown when watchid is missing or invalid) -->
+    <div class="status-box" id="error-section" hidden>
+      <h2>Video not found</h2>
+      <p id="error-msg">The requested video could not be loaded.</p>
+      <div class="actions">
+        <a class="btn btn-secondary" href="../index.html">&#8592; Back to browse</a>
+        <a class="btn btn-primary" href="../../index.html">Go to main page</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  // Auth gate – redirect to site root if not logged in
+  if (!localStorage.getItem("sessionUser")) {
+    location.href = "../../index.html";
+  }
+
+  function showError(msg) {
+    document.getElementById("error-msg").textContent = msg;
+    document.getElementById("error-section").removeAttribute("hidden");
+  }
+
+  function loadVideo() {
+    var params = new URLSearchParams(location.search);
+    var watchid = params.get("watchid");
+
+    // Validate: must exist and be a positive integer (no leading zeros)
+    if (!watchid || !/^[1-9]\d*$/.test(watchid)) {
+      showError("Invalid or missing video ID.");
+      return;
+    }
+
+    var videoSrc = "../../assets/video/" + watchid + ".mp4";
+    var player = document.getElementById("video-player");
+    var playerSection = document.getElementById("player-section");
+
+    player.src = videoSrc;
+
+    // Show the player; if the video fails to load, switch to error view
+    player.addEventListener("error", function() {
+      playerSection.setAttribute("hidden", "");
+      showError("Video " + watchid + " could not be found or played.");
+    });
+
+    playerSection.removeAttribute("hidden");
+  }
+
+  loadVideo();
+</script>
+
+</body>
+</html>

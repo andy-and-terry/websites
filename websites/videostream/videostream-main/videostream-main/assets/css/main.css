@@ -1,0 +1,9 @@
+/* Global font */
+html, body {
+  font-family: sans-serif;
+}
+
+/* Make basically all text sans-serif (covers most elements) */
+* {
+  font-family: sans-serif;
+}
