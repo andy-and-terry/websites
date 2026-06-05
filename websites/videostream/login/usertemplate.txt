@@ -1,0 +1,14 @@
+[
+  {
+    "username": "student_01",
+    "role": "student",
+    "salt": "X4p0hKq9ZP8d9g==",
+    "hash": "m1o1F+0e1Z3jv0..."
+  },
+  {
+    "username": "teacher_01",
+    "role": "teacher",
+    "salt": "8p3Rkq1LZxk2VQ==",
+    "hash": "h8cP0X1ZxQ9..."
+  }
+]

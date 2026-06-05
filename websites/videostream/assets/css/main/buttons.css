@@ -1,0 +1,19 @@
+/* Buttons: white text, black border (and black background so it looks "black") */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  color: #00aafa;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+/* Optional: nicer hover */
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+  filter: brightness(1.1);
+}
