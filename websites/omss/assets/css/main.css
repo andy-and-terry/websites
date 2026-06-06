@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+body{
+  font-family: Nunito, "Sans Serif"
+}
+.code{
+  font-family: "Courier Prime", "Sans Serif"
+}
+.highlight{
+  font-family: Nunito, "Sans Serif"
+  background-color: yellow;
+}
