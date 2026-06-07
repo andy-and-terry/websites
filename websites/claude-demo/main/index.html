@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude — Think with Something Extraordinary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1714;
+    --ink-soft: #3D3830;
+    --warm-mid: #8C7B6B;
+    --claude-orange: #D4622A;
+    --claude-amber: #E8923C;
+    --claude-sand: #C9A97A;
+    --glow: rgba(212, 98, 42, 0.12);
+    --mono: 'DM Mono', monospace;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--claude-orange);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: multiply;
+  }
+  #cursor.hovering {
+    width: 40px; height: 40px;
+    background: rgba(212, 98, 42, 0.25);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--claude-orange); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--cream) !important;
+    padding: 0.5rem 1.25rem !important;
+    border-radius: 2px !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    transition: background 0.2s !important;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--claude-orange) !important; color: white !important; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 8rem 3rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif);
+    font-size: clamp(120px, 22vw, 340px);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(26, 23, 20, 0.06);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.03em;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+  }
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--claude-orange);
+    margin-bottom: 2rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(212, 98, 42, 0.3);
+    border-radius: 2px;
+  }
+  .hero-label span { display: inline-block; width: 6px; height: 6px; background: var(--claude-orange); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero-h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--claude-orange);
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    color: var(--warm-mid);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--claude-orange);
+    color: white;
+    border: none;
+    padding: 0.9rem 2.5rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: none;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--ink); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid rgba(26, 23, 20, 0.3);
+    padding: 0.9rem 2.5rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: none;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--claude-orange); color: var(--claude-orange); transform: translateY(-2px); }
+
+  /* Marquee */
+  .marquee-section {
+    border-top: 1px solid rgba(26,23,20,0.1);
+    border-bottom: 1px solid rgba(26,23,20,0.1);
+    padding: 1rem 0;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track span {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--claude-sand);
+    padding: 0 2.5rem;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .marquee-track span.sep { color: var(--claude-orange); padding: 0; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Live Demo */
+  .demo-section {
+    padding: 8rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--claude-orange);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .section-title em { font-style: italic; color: var(--claude-orange); }
+  .section-sub {
+    font-size: 1.05rem;
+    color: var(--warm-mid);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 4rem;
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .demo-card {
+    background: white;
+    border: 1px solid rgba(26, 23, 20, 0.08);
+    padding: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .demo-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--claude-orange);
+    transition: height 0.3s ease;
+  }
+  .demo-card:hover::before { height: 100%; }
+  .demo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(26, 23, 20, 0.08);
+  }
+  .demo-card.large { grid-column: span 2; }
+  .demo-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .demo-card-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--claude-orange);
+    margin-bottom: 0.75rem;
+  }
+  .demo-card-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .demo-card-body {
+    font-size: 0.9rem;
+    color: var(--warm-mid);
+    line-height: 1.7;
+  }
+
+  /* Code example */
+  .code-window {
+    background: var(--ink);
+    border-radius: 0;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+  .code-titlebar {
+    background: rgba(255,255,255,0.06);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .code-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .code-dot.r { background: #FF5F57; }
+  .code-dot.y { background: #FEBC2E; }
+  .code-dot.g { background: #28C840; }
+  .code-filename {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.35);
+    margin-left: 0.5rem;
+  }
+  .code-body {
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+  .code-body pre { color: #E8D5B7; }
+  .c-comment { color: rgba(255,255,255,0.3); }
+  .c-kw { color: #F29D79; }
+  .c-str { color: #A8D8A8; }
+  .c-fn { color: #89CFF0; }
+  .c-var { color: #FFD580; }
+  .c-op { color: rgba(255,255,255,0.5); }
+  .c-num { color: #D4A5FF; }
+
+  /* Typewriter demo */
+  .typewriter-demo {
+    background: white;
+    border: 1px solid rgba(26,23,20,0.1);
+    padding: 2rem;
+    margin-top: 1.5rem;
+    position: relative;
+  }
+  .tw-prompt {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--claude-orange);
+    margin-bottom: 0.75rem;
+  }
+  .tw-response {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    min-height: 80px;
+  }
+  .tw-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--claude-orange);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* Features Bento */
+  .features-section {
+    background: var(--ink);
+    padding: 8rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .features-section::before {
+    content: 'CAPABILITIES';
+    position: absolute;
+    top: -2rem;
+    right: -2rem;
+    font-family: var(--serif);
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.02);
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+  .features-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .features-header { margin-bottom: 4rem; }
+  .features-header .section-eyebrow { color: var(--claude-amber); }
+  .features-header .section-title { color: var(--cream); }
+  .features-header .section-sub { color: rgba(255,255,255,0.4); }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto;
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .bento-cell {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    transition: background 0.25s;
+  }
+  .bento-cell:hover { background: rgba(255,255,255,0.04); }
+  .bc-1 { grid-column: span 3; }
+  .bc-2 { grid-column: span 3; }
+  .bc-3 { grid-column: span 2; }
+  .bc-4 { grid-column: span 2; }
+  .bc-5 { grid-column: span 2; }
+  .bc-6 { grid-column: span 4; }
+  .bc-7 { grid-column: span 2; }
+  .bento-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+  .bento-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .bento-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+  .bento-text {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+  }
+  .bento-accent { color: var(--claude-amber); }
+  .bento-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--claude-orange);
+    border: 1px solid rgba(212, 98, 42, 0.35);
+    padding: 0.25rem 0.75rem;
+    margin-top: 1rem;
+  }
+
+  /* Stat bar */
+  .stat-bar {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    width: 80px;
+    flex-shrink: 0;
+    letter-spacing: 0.06em;
+  }
+  .stat-track {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-fill {
+    height: 100%;
+    background: var(--claude-orange);
+    transform-origin: left;
+    animation: fillBar 1.5s ease-out forwards;
+    transform: scaleX(0);
+  }
+  @keyframes fillBar { to { transform: scaleX(1); } }
+  .stat-pct {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    width: 32px;
+    text-align: right;
+  }
+
+  /* Testimonials */
+  .quotes-section {
+    padding: 8rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .quote-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+  .quote-card {
+    border-top: 2px solid rgba(26,23,20,0.1);
+    padding-top: 2rem;
+    position: relative;
+    transition: border-color 0.25s;
+  }
+  .quote-card:hover { border-color: var(--claude-orange); }
+  .quote-mark {
+    font-family: var(--serif);
+    font-size: 4rem;
+    color: var(--claude-orange);
+    line-height: 0.6;
+    margin-bottom: 1.25rem;
+    display: block;
+    opacity: 0.4;
+  }
+  .quote-text {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .quote-author {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--warm-mid);
+  }
+  .quote-role {
+    color: rgba(26,23,20,0.4);
+    display: block;
+    margin-top: 0.2rem;
+  }
+
+  /* How it works */
+  .how-section {
+    background: #F0EAE0;
+    padding: 8rem 3rem;
+  }
+  .how-inner { max-width: 1200px; margin: 0 auto; }
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 5rem;
+    position: relative;
+  }
+  .how-steps::before {
+    content: '';
+    position: absolute;
+    top: 1.75rem;
+    left: calc(12.5%);
+    right: calc(12.5%);
+    height: 1px;
+    background: rgba(26,23,20,0.15);
+    z-index: 0;
+  }
+  .how-step {
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .how-step-num {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid rgba(26,23,20,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--claude-orange);
+    margin-bottom: 2rem;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .how-step:hover .how-step-num {
+    background: var(--claude-orange);
+    border-color: var(--claude-orange);
+    color: white;
+  }
+  .how-step-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .how-step-body {
+    font-size: 0.875rem;
+    color: var(--warm-mid);
+    line-height: 1.7;
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--claude-orange);
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'START';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif);
+    font-size: 20rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.06);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .cta-inner { position: relative; z-index: 1; }
+  .cta-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1.5rem;
+  }
+  .cta-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+  }
+  .cta-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 3rem;
+  }
+  .btn-cta {
+    background: white;
+    color: var(--claude-orange);
+    border: none;
+    padding: 1.1rem 3rem;
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.03em;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn-cta:hover { background: var(--ink); color: white; transform: translateY(-3px); }
+
+  /* Footer */
+  footer {
+    background: var(--ink);
+    padding: 3rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.08em;
+  }
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--claude-amber); }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.35s; }
+  .reveal-delay-4 { transition-delay: 0.5s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .demo-grid { grid-template-columns: 1fr; }
+    .demo-card.large { grid-column: span 1; }
+    .bento { grid-template-columns: 1fr; }
+    .bc-1, .bc-2, .bc-3, .bc-4, .bc-5, .bc-6, .bc-7 { grid-column: span 1; }
+    .quote-grid { grid-template-columns: 1fr; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .how-steps::before { display: none; }
+    .demo-section, .quotes-section { padding: 5rem 1.5rem; }
+    .features-section, .how-section, .cta-section { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo">Claude</a>
+  <ul class="nav-links">
+    <li><a href="#demo">Capabilities</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="https://claude.ai" class="nav-cta">Try Claude</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg-text" aria-hidden="true">Claude</div>
+  <div class="hero-content">
+    <div class="hero-label">
+      <span></span> AI by Anthropic — Now available
+    </div>
+    <h1 class="hero-h1">
+      Think with something<br><em>extraordinary</em>
+    </h1>
+    <p class="hero-sub">Claude is an AI assistant that writes, codes, reasons, and creates with you — not just for you. Nuanced, thoughtful, genuinely capable.</p>
+    <div class="hero-actions">
+      <a href="https://claude.ai" class="btn-primary">Start for free</a>
+      <a href="#demo" class="btn-ghost">See what it can do</a>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-section" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- Live Demo Section -->
+<section class="demo-section" id="demo">
+  <p class="section-eyebrow reveal">What Claude does</p>
+  <h2 class="section-title reveal reveal-delay-1">Every task.<br><em>One conversation.</em></h2>
+  <p class="section-sub reveal reveal-delay-2">From drafting an email to debugging production code — Claude handles it all with the clarity of an expert colleague.</p>
+
+  <div class="demo-grid">
+    <!-- Code card -->
+    <div class="demo-card reveal reveal-delay-1">
+      <span class="demo-card-tag">Code &amp; Engineering</span>
+      <div class="demo-card-title">Write, debug &amp; explain code in any language</div>
+      <p class="demo-card-body">Claude understands context across your entire codebase — not just the snippet you paste.</p>
+      <div class="code-window">
+        <div class="code-titlebar">
+          <div class="code-dot r"></div>
+          <div class="code-dot y"></div>
+          <div class="code-dot g"></div>
+          <span class="code-filename">sort.py</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="c-comment"># Claude-suggested optimisation</span>
+<span class="c-kw">def</span> <span class="c-fn">quicksort</span>(<span class="c-var">arr</span>):
+  <span class="c-kw">if</span> <span class="c-fn">len</span>(<span class="c-var">arr</span>) <span class="c-op">&lt;=</span> <span class="c-num">1</span>:
+    <span class="c-kw">return</span> <span class="c-var">arr</span>
+  <span class="c-var">pivot</span> <span class="c-op">=</span> <span class="c-var">arr</span>[<span class="c-fn">len</span>(<span class="c-var">arr</span>) <span class="c-op">//</span> <span class="c-num">2</span>]
+  <span class="c-var">left</span>   <span class="c-op">=</span> [<span class="c-var">x</span> <span class="c-kw">for</span> <span class="c-var">x</span> <span class="c-kw">in</span> <span class="c-var">arr</span> <span class="c-kw">if</span> <span class="c-var">x</span> <span class="c-op">&lt;</span> <span class="c-var">pivot</span>]
+  <span class="c-var">mid</span>    <span class="c-op">=</span> [<span class="c-var">x</span> <span class="c-kw">for</span> <span class="c-var">x</span> <span class="c-kw">in</span> <span class="c-var">arr</span> <span class="c-kw">if</span> <span class="c-var">x</span> <span class="c-op">==</span> <span class="c-var">pivot</span>]
+  <span class="c-var">right</span>  <span class="c-op">=</span> [<span class="c-var">x</span> <span class="c-kw">for</span> <span class="c-var">x</span> <span class="c-kw">in</span> <span class="c-var">arr</span> <span class="c-kw">if</span> <span class="c-var">x</span> <span class="c-op">&gt;</span> <span class="c-var">pivot</span>]
+  <span class="c-kw">return</span> <span class="c-fn">quicksort</span>(<span class="c-var">left</span>) <span class="c-op">+</span> <span class="c-var">mid</span> <span class="c-op">+</span> <span class="c-fn">quicksort</span>(<span class="c-var">right</span>)</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Writing card -->
+    <div class="demo-card reveal reveal-delay-2">
+      <span class="demo-card-tag">Writing &amp; Creativity</span>
+      <div class="demo-card-title">Draft, edit &amp; transform any kind of writing</div>
+      <p class="demo-card-body">Emails, essays, stories, scripts — Claude matches your voice and elevates your ideas.</p>
+      <div class="typewriter-demo">
+        <div class="tw-prompt">→ "Write a cold email for a SaaS pitch"</div>
+        <div class="tw-response" id="twResponse"><span class="tw-cursor"></span></div>
+      </div>
+    </div>
+
+    <!-- Analysis card (large) -->
+    <div class="demo-card large reveal">
+      <span class="demo-card-tag">Analysis &amp; Research</span>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+        <div>
+          <div class="demo-card-title">Deep reasoning across complex documents</div>
+          <p class="demo-card-body">Feed Claude a 50-page PDF, a dataset, or a stack of meeting notes. It synthesises, cross-references, and surfaces insight you'd spend hours finding yourself.</p>
+          <div style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.75rem; font-size:0.8rem; color:var(--warm-mid);">
+              <span style="width:6px;height:6px;background:var(--claude-orange);border-radius:50%;flex-shrink:0;"></span> Summarise & extract key points
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem; font-size:0.8rem; color:var(--warm-mid);">
+              <span style="width:6px;height:6px;background:var(--claude-orange);border-radius:50%;flex-shrink:0;"></span> Cross-reference multiple sources
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem; font-size:0.8rem; color:var(--warm-mid);">
+              <span style="width:6px;height:6px;background:var(--claude-orange);border-radius:50%;flex-shrink:0;"></span> Build structured reports instantly
+            </div>
+          </div>
+        </div>
+        <div style="background:var(--cream); padding:1.5rem;">
+          <div style="font-family:var(--mono); font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--warm-mid); margin-bottom:1rem;">Context window</div>
+          <div style="font-family:var(--serif); font-size:2.5rem; font-weight:900; color:var(--ink); line-height:1;">200K</div>
+          <div style="font-size:0.8rem; color:var(--warm-mid); margin-top:0.35rem;">tokens of context — that's roughly 500 pages of text held in mind at once.</div>
+          <div style="margin-top:1.5rem; border-top:1px solid rgba(26,23,20,0.1); padding-top:1.25rem;">
+            <div style="font-family:var(--mono); font-size:0.65rem; letter-spacing:0.1em; color:var(--warm-mid); margin-bottom:0.75rem; text-transform:uppercase;">Task speed</div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);">
+                <span>Summarise 50pp report</span>
+                <span style="font-family:var(--mono); color:var(--claude-orange);">~8s</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);">
+                <span>Debug 200-line function</span>
+                <span style="font-family:var(--mono); color:var(--claude-orange);">~4s</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);">
+                <span>Draft 500-word article</span>
+                <span style="font-family:var(--mono); color:var(--claude-orange);">~6s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Bento -->
+<section class="features-section" id="features">
+  <div class="features-inner">
+    <div class="features-header">
+      <p class="section-eyebrow reveal">Why Claude</p>
+      <h2 class="section-title reveal reveal-delay-1">Thoughtfully built.<br>Genuinely <em>different.</em></h2>
+      <p class="section-sub reveal reveal-delay-2">Claude is designed to be helpful, harmless, and honest — not just fast and flashy.</p>
+    </div>
+    <div class="bento">
+      <div class="bento-cell bc-1 reveal">
+        <div class="bento-num">01</div>
+        <div class="bento-icon">🧠</div>
+        <div class="bento-title">Nuanced reasoning</div>
+        <p class="bento-text">Claude doesn't just pattern-match. It weighs competing arguments, acknowledges uncertainty, and reasons through edge cases like a careful thinker.</p>
+        <div class="stat-bar">
+          <div class="stat-row">
+            <span class="stat-label">Logic</span>
+            <div class="stat-track"><div class="stat-fill" style="width:92%"></div></div>
+            <span class="stat-pct">92%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Maths</span>
+            <div class="stat-track"><div class="stat-fill" style="width:88%; animation-delay:0.2s"></div></div>
+            <span class="stat-pct">88%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Science</span>
+            <div class="stat-track"><div class="stat-fill" style="width:95%; animation-delay:0.4s"></div></div>
+            <span class="stat-pct">95%</span>
+          </div>
+        </div>
+      </div>
+      <div class="bento-cell bc-2 reveal reveal-delay-1">
+        <div class="bento-num">02</div>
+        <div class="bento-icon">🔐</div>
+        <div class="bento-title">Safety by design</div>
+        <p class="bento-text">Built on Constitutional AI principles by Anthropic — a safety-focused lab. Claude is trained to be honest about what it doesn't know, and careful about harm.</p>
+        <div class="bento-tag">Anthropic Research</div>
+      </div>
+      <div class="bento-cell bc-3 reveal">
+        <div class="bento-num">03</div>
+        <div class="bento-icon">💬</div>
+        <div class="bento-title">Natural conversation</div>
+        <p class="bento-text">Adapts tone across contexts — technical for developers, warm for everyday users.</p>
+      </div>
+      <div class="bento-cell bc-4 reveal reveal-delay-1">
+        <div class="bento-num">04</div>
+        <div class="bento-icon">🌍</div>
+        <div class="bento-title">Multilingual</div>
+        <p class="bento-text">Reads, writes and converses fluently across dozens of languages without missing a beat.</p>
+      </div>
+      <div class="bento-cell bc-5 reveal reveal-delay-2">
+        <div class="bento-num">05</div>
+        <div class="bento-icon">📎</div>
+        <div class="bento-title">Files &amp; vision</div>
+        <p class="bento-text">Analyse PDFs, CSVs, images, and codebases — not just text.</p>
+      </div>
+      <div class="bento-cell bc-6 reveal">
+        <div class="bento-num">06</div>
+        <div class="bento-icon">⚡</div>
+        <div class="bento-title">Claude for every workflow — web, API, mobile, and beyond</div>
+        <p class="bento-text">Use Claude on claude.ai, integrate it via API into your own products, or use Claude Code in your terminal to autonomously build entire features. One model, infinite surfaces.</p>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1.5rem;">
+          <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:0.35rem 0.75rem; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">claude.ai</span>
+          <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:0.35rem 0.75rem; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">REST API</span>
+          <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:0.35rem 0.75rem; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">Claude Code</span>
+          <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:0.35rem 0.75rem; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">iOS / Android</span>
+          <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:0.35rem 0.75rem; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.5); letter-spacing:0.08em;">MCP Tools</span>
+        </div>
+      </div>
+      <div class="bento-cell bc-7 reveal reveal-delay-1">
+        <div class="bento-num">07</div>
+        <div class="bento-icon">🎨</div>
+        <div class="bento-title">Creative depth</div>
+        <p class="bento-text">From poetry to game scripts to brand copy — genuine creative voice, not boilerplate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quotes -->
+<section class="quotes-section">
+  <p class="section-eyebrow reveal">What people say</p>
+  <h2 class="section-title reveal reveal-delay-1">Real people.<br><em>Real impact.</em></h2>
+  <div class="quote-grid">
+    <div class="quote-card reveal reveal-delay-1">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">Claude doesn't just answer questions — it helps me think better. That's a rarer thing than I expected from an AI.</p>
+      <div class="quote-author">
+        Priya M.
+        <span class="quote-role">Product Designer, Singapore</span>
+      </div>
+    </div>
+    <div class="quote-card reveal reveal-delay-2">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">I gave it our entire codebase and asked it to find bugs. It came back with five issues I'd been blind to for months.</p>
+      <div class="quote-author">
+        Luka T.
+        <span class="quote-role">Senior Engineer, Berlin</span>
+      </div>
+    </div>
+    <div class="quote-card reveal reveal-delay-3">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">The writing feels like a collaborator, not a machine. It pushes back gently when my ideas need it.</p>
+      <div class="quote-author">
+        Amara O.
+        <span class="quote-role">Author &amp; Content Strategist</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <p class="section-eyebrow reveal">Getting started</p>
+    <h2 class="section-title reveal reveal-delay-1">Up and running<br><em>in minutes.</em></h2>
+    <div class="how-steps">
+      <div class="how-step reveal reveal-delay-1">
+        <div class="how-step-num">01</div>
+        <div class="how-step-title">Create a free account</div>
+        <p class="how-step-body">Sign up at claude.ai — no credit card needed for the free tier. Start immediately.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="how-step-num">02</div>
+        <div class="how-step-title">Start a conversation</div>
+        <p class="how-step-body">Type any question, paste code, upload a file. Claude meets you where you are.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-3">
+        <div class="how-step-num">03</div>
+        <div class="how-step-title">Iterate &amp; refine</div>
+        <p class="how-step-body">Follow up, push back, ask for alternatives. The conversation builds context as you go.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-4">
+        <div class="how-step-num">04</div>
+        <div class="how-step-title">Build with the API</div>
+        <p class="how-step-body">Ready to go deeper? Integrate Claude into your product via the clean REST API.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <p class="cta-eyebrow">Free to start</p>
+    <h2 class="cta-title">Try Claude today.</h2>
+    <p class="cta-sub">No waitlist. No credit card. Just a better way to think.</p>
+    <a href="https://claude.ai" class="btn-cta">Open Claude →</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Claude by Anthropic</div>
+  <ul class="footer-links">
+    <li><a href="https://anthropic.com">Anthropic</a></li>
+    <li><a href="https://docs.anthropic.com">API Docs</a></li>
+    <li><a href="https://anthropic.com/privacy">Privacy</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Anthropic, PBC</div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button, .demo-card, .bento-cell, .quote-card, .how-step').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+});
+
+// Marquee
+const marqueeItems = [
+  'Code Generation','Document Analysis','Creative Writing','Data Extraction',
+  'Research Synthesis','Email Drafting','Debugging','Multilingual Translation',
+  'Strategic Planning','Math Reasoning','API Integration','Summarisation',
+  'Brainstorming','Legal Review','Tutoring'
+];
+const track = document.getElementById('marqueeTrack');
+const doubled = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
+doubled.forEach((item, i) => {
+  const sp = document.createElement('span');
+  sp.textContent = item;
+  track.appendChild(sp);
+  if (i < doubled.length - 1) {
+    const sep = document.createElement('span');
+    sep.textContent = '◆';
+    sep.className = 'sep';
+    track.appendChild(sep);
+  }
+});
+
+// Typewriter
+const lines = [
+  "Subject: A quick idea that could save you 3 hours a week\n\nHi [Name],\n\nI noticed your team still handles [X] manually — we've helped 40+ companies cut that time by 80%.\n\nWorth a 15-minute call this week?"
+];
+let lineIdx = 0, charIdx = 0;
+const twEl = document.getElementById('twResponse');
+let twTimer;
+function typeWrite() {
+  const text = lines[lineIdx];
+  if (charIdx <= text.length) {
+    twEl.innerHTML = text.slice(0, charIdx).replace(/\n/g, '<br>') + '<span class="tw-cursor"></span>';
+    charIdx++;
+    twTimer = setTimeout(typeWrite, charIdx === 1 ? 600 : 28);
+  } else {
+    setTimeout(() => {
+      charIdx = 0;
+      lineIdx = (lineIdx + 1) % lines.length;
+      typeWrite();
+    }, 4000);
+  }
+}
+typeWrite();
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
