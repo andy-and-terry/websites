@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Mart — Virtual Shop</title>
+<style>
+  :root {
+    --bg: #101418;
+    --panel: #1a2027;
+    --panel-2: #222a33;
+    --ink: #e8edf2;
+    --muted: #8b97a3;
+    --accent: #ffb627;
+    --accent-2: #2dd4bf;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+  header {
+    padding: 40px 24px 24px;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+  }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--muted); margin-top: 6px; }
+
+  .search-wrap {
+    max-width: 560px;
+    margin: 24px auto 0;
+    position: relative;
+  }
+  #search {
+    width: 100%;
+    padding: 14px 18px 14px 44px;
+    font-size: 1rem;
+    border: 2px solid var(--panel-2);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s;
+  }
+  #search:focus { border-color: var(--accent); }
+  .search-wrap::before {
+    content: "🔍";
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: .95rem;
+    pointer-events: none;
+  }
+
+  main {
+    max-width: 1000px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+  }
+  #count {
+    color: var(--muted);
+    font-size: .85rem;
+    margin-bottom: 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--panel-2);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+  }
+  .card:hover, .card:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .card .emoji { font-size: 2.2rem; }
+  .card h3 { margin: 10px 0 4px; font-size: 1.02rem; }
+  .card .cat {
+    display: inline-block;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--accent-2);
+    margin-bottom: 6px;
+  }
+  .card .price { color: var(--accent); font-weight: 700; }
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 60px 0;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Pixel <span>Mart</span></h1>
+  <p>Click any product to place your order</p>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search products…" autocomplete="off">
+  </div>
+</header>
+
+<main>
+  <div id="count"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">No products match your search 😢</div>
+</main>
+
+<script>
+  // ===== CONFIG: put your Google Forms link here =====
+  const googleforms = "https://docs.google.com/forms/d/e/1FAIpQLSdIKF4ygNWTM6ey5-W7sGV3DCIj177ls2zhZLz1H-S22z2f_Q/viewform?usp=publish-editor";
+  // ===================================================
+
+  const products = [
+    //{ name: "Mechanical Keyboard", cat: "Tech",     price: 89.90, emoji: "⌨️" },
+    //{ name: "Wireless Mouse",      cat: "Tech",     price: 29.50, emoji: "🖱️" },
+    //{ name: "USB-C Hub",           cat: "Tech",     price: 45.00, emoji: "🔌" },
+    //{ name: "Gaming Headset",      cat: "Tech",     price: 79.00, emoji: "🎧" },
+    //{ name: "Pixel Plushie",       cat: "Toys",     price: 19.90, emoji: "🧸" },
+    //{ name: "Mystery Loot Box",    cat: "Toys",     price: 14.90, emoji: "🎁" },
+    //{ name: "Foam Dart Blaster",   cat: "Toys",     price: 24.90, emoji: "🔫" },
+    //{ name: "Bubble Tea Kit",      cat: "Food",     price: 12.90, emoji: "🧋" },
+    //{ name: "Instant Ramen Pack",  cat: "Food",     price: 8.90,  emoji: "🍜" },
+    //{ name: "Chocolate Box",       cat: "Food",     price: 16.50, emoji: "🍫" },
+    //{ name: "Sketchbook",          cat: "Stationery", price: 9.90, emoji: "📓" },
+    //{ name: "Gel Pen Set",         cat: "Stationery", price: 6.50, emoji: "🖊️" },
+    //{ name: "Sticker Pack",        cat: "Stationery", price: 4.90, emoji: "✨" },
+    //{ name: "Desk Lamp",           cat: "Home",     price: 32.00, emoji: "💡" },
+    //{ name: "Mini Plant",          cat: "Home",     price: 11.90, emoji: "🪴" },
+    //{ name: "Cozy Blanket",        cat: "Home",     price: 27.90, emoji: "🛋️" },
+  ];
+
+  const grid  = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  const count = document.getElementById("count");
+
+  function render(list) {
+    grid.innerHTML = "";
+    list.forEach(p => {
+      const card = document.createElement("button");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="emoji">${p.emoji}</div>
+        <span class="cat">${p.cat}</span>
+        <h3>${p.name}</h3>
+        <div class="price">$${p.price.toFixed(2)}</div>
+      `;
+      card.addEventListener("click", () => orderProduct(p));
+      grid.appendChild(card);
+    });
+    empty.style.display = list.length ? "none" : "block";
+    count.textContent = `${list.length} product${list.length === 1 ? "" : "s"}`;
+  }
+
+  function orderProduct(p) {
+    alert(`You selected "${p.name}" ($${p.price.toFixed(2)}).\n\nYou will now be redirected to a Google Forms to complete your order.`);
+    window.location.href = googleforms;
+  }
+
+  document.getElementById("search").addEventListener("input", e => {
+    const q = e.target.value.trim().toLowerCase();
+    render(products.filter(p =>
+      p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q)
+    ));
+  });
+
+  render(products);
+</script>
+
+</body>
+</html>
