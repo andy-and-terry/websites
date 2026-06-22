@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winter Family Trip · Melbourne → Perth → Sydney · June 2027 (Detailed)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#152a2e; --glow:#7fd9b6; --steam:#c97a3e;
+    --paper:#f6f8f6; --text:#2a3434; --muted:#6b7a76; --line:#dde6e1; --card:#ffffff;
+    --warn:#b3461f; --warnbg:#fcefe9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--text);font-family:'Atkinson Hyperlegible',sans-serif;font-size:17px;line-height:1.6}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  header{
+    background:
+      radial-gradient(900px 500px at 15% 0%,rgba(127,217,182,.18),transparent 60%),
+      radial-gradient(700px 500px at 85% 30%,rgba(201,122,62,.14),transparent 60%),
+      linear-gradient(180deg,#0e1d20 0%,var(--ink) 100%);
+    color:#eef6f1;padding:60px 20px 50px;
+  }
+  .hero-inner{max-width:920px;margin:0 auto}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--glow)}
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(30px,5vw,48px);line-height:1.08;margin:14px 0 16px}
+  .route{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#bcd3cb;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .route b{color:#fff;font-weight:500}
+  .route .arrow{color:var(--glow)}
+  .hero-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .chip{border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 14px;font-size:13px;color:#dcebe3}
+  .chip b{color:var(--glow);font-weight:700}
+  h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:25px;color:var(--ink);margin:52px 0 8px}
+  h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:16px;color:var(--ink);margin:18px 0 6px}
+  .sub{color:var(--muted);margin-bottom:18px}
+  .section-label{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--glow);background:var(--ink);display:inline-block;padding:5px 12px;border-radius:6px;margin:38px 0 14px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px 16px;margin-bottom:16px}
+  .day-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+  .day-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--steam)}
+  .day h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px;color:var(--ink);margin-top:4px}
+  .temp{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);text-align:right}
+  .row{display:grid;grid-template-columns:92px 1fr;gap:14px;padding:9px 0;border-bottom:1px dashed #edf1ef}
+  .row:last-child{border-bottom:none}
+  .t{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);font-weight:500;padding-top:2px}
+  .row p{font-size:15.5px;margin-bottom:4px}
+  .row p:last-child{margin-bottom:0}
+  .row .why{font-size:13.5px;color:var(--muted);margin-top:3px}
+  .row .price{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--steam);font-weight:500}
+  .row .addr{font-size:13px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+  .stay{margin-top:10px;font-size:14.5px;background:#f0f7f3;border-left:3px solid var(--glow);padding:10px 14px;border-radius:0 8px 8px 0}
+  .stay b{color:var(--ink)}
+  .warn{margin-top:10px;font-size:14px;background:var(--warnbg);border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;color:#6b3015}
+  .warn b{color:var(--warn)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14.5px}
+  th{background:var(--ink);color:#eef6f1;text-align:left;padding:11px 13px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:13.5px}
+  td{padding:10px 13px;border-top:1px solid var(--line);vertical-align:top}
+  td .cat{font-size:12.5px;color:var(--muted)}
+  tr.total td{background:#f0f7f3;font-weight:700;color:var(--ink)}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13.5px}
+  .tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .tip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;font-size:14.5px}
+  .tip b{display:block;color:var(--ink);font-family:'Bricolage Grotesque',sans-serif;font-weight:600;margin-bottom:4px}
+  .note{font-size:13.5px;color:var(--muted);margin-top:12px}
+  .checklist{columns:2;column-gap:30px;font-size:15px;margin-top:8px}
+  .checklist div{break-inside:avoid;padding:5px 0;border-bottom:1px dashed #edf1ef}
+  @media(max-width:560px){.row{grid-template-columns:64px 1fr}.checklist{columns:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero-inner">
+    <div class="eyebrow">June 2027 · Winter · School holidays · 10 days · Fully detailed</div>
+    <h1>Penguins, caves, quokkas &amp; a harbour to remember</h1>
+    <div class="route">
+      <b>SIN</b><span class="arrow">→</span><b>Melbourne</b><span class="arrow">→</span><b>Perth</b><span class="arrow">→</span><b>Margaret River</b><span class="arrow">→</span><b>Rottnest</b><span class="arrow">→</span><b>Sydney</b><span class="arrow">→</span><b>SIN</b>
+    </div>
+    <div class="hero-facts">
+      <div class="chip"><b>10 days</b> · Sat 5 – Mon 14 Jun (dates flexible to actual SG school holiday calendar)</div>
+      <div class="chip"><b>5 pax</b> · 2 adults, 2 kids, 1 grandparent</div>
+      <div class="chip"><b>All economy</b> · self-drive in MEL &amp; WA, no car in Sydney</div>
+      <div class="chip"><b>Winter</b> · 6–18°C across all three cities</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2>How to read this</h2>
+  <p class="sub">Every activity below has the real, currently-published 2026 adult/child price (AUD), since June-2027 rates aren't released yet — expect a small CPI bump of a few percent by the time you book. Addresses, opening hours, and booking notes are included so this can go straight into a calendar. Prices are per the operator's own site or major resellers as of June 2026.</p>
+
+  <h2>Flights</h2>
+  <table>
+    <thead><tr><th>Leg</th><th>Route</th><th>Flight time</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="mono">SIN → MEL</td><td>~7h 35m</td><td>SQ, Jetstar Asia or Scoot all fly this. Take a morning Changi departure (typically 9–11am) so you land MEL early evening local time. MEL is UTC+10 in June (no daylight saving in winter) = +2h vs SGT.</td></tr>
+      <tr><td>2</td><td class="mono">MEL → PER</td><td>~4h</td><td>Domestic — Jetstar, Virgin Australia, Qantas. WA is UTC+8 = same as SGT in June (WA never observes daylight saving).</td></tr>
+      <tr><td>3</td><td class="mono">PER → SYD</td><td>~5h</td><td>Domestic — same three carriers. NSW is UTC+10 in June = +2h vs Perth.</td></tr>
+      <tr><td>4</td><td class="mono">SYD → SIN</td><td>~8h</td><td>SQ direct or Scoot. An evening departure (~7–9pm) lands Changi around midnight–2am, leaving the whole next day free before school.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Book around <b>July 2026</b>, ~330 days out, when June-2027 schedules open. Compare every domestic leg across Jetstar/Virgin/Qantas — the MEL→PER and PER→SYD hops are heavily contested routes with frequent sales. Check baggage allowance carefully on Jetstar/Scoot fares, as base "Starter" fares often exclude checked bags — for 5 people the bag fees can erase the fare saving.</p>
+
+  <!-- ══════════ MELBOURNE ══════════ -->
+  <div class="section-label">Melbourne · Days 1–4</div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 1 · Sat 5 Jun · Singapore → Melbourne</div><h3>Fly in, settle in</h3></div><div class="temp">MEL 7–15°C<br>Sunrise 7:24am · Sunset 5:11pm</div></div>
+    <div class="row"><div class="t">Morning</div><div><p>Depart Changi (T1/T2/T3 depending on carrier) on the morning flight, ~7h 35m. Pre-order kids' meals at booking — most carriers need this 24h+ in advance.</p></div></div>
+    <div class="row"><div class="t">~6 pm</div><div><p>Land Melbourne Airport (MEL), Terminal 2/3/4 depending on carrier. Collect the hire car from the airport rental precinct (all major companies — Hertz, Avis, Budget, Europcar — operate from the same on-site building, a short walk from the terminal). Confirm a 7-seater or mid-size SUV booked in advance for 5 people + luggage.</p><p class="price">Car hire: ~A$65–95/day for a 7-seater in winter low season.</p></div></div>
+    <div class="row"><div class="t">~6:45 pm</div><div><p>Drive to the apartment (~25–30 min via the CityLink/Tullamarine Fwy, depending on traffic). Buy a CityLink e-PASS or day pass online before driving — Melbourne's tollways have no boom gates and unregistered crossings attract a fee.</p></div></div>
+    <div class="row"><div class="t">Evening</div><div><p>Dinner at <b>Hu Tong Dumpling Bar</b> or any Chinatown spot on Little Bourke St (between Swanston and Russell) — reliable, warm, familiar after a long flight. Expect A$15–25/head for a full dumpling dinner.</p></div></div>
+    <div class="stay">
+      <b>Stay:</b> 2-bedroom apartment with free on-site parking, Carlton, Brunswick East, or Footscray × 3 nights.
+      <br><b>Why:</b> ~25–30% cheaper than equivalent Southbank/CBD stays, all three are a 10–15 min tram ride from the CBD on the free City Circle or a regular tram, and on-site parking removes the daily CBD parking cost (often A$40–60/day in the centre).
+      <br><b>Search terms:</b> Airbnb/Stayz "Carlton apartment parking 5 guests" or "Brunswick East townhouse".
+    </div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 2 · Sun 6 Jun · Melbourne</div><h3>Museum, market &amp; laneways</h3></div><div class="temp">7–14°C</div></div>
+    <div class="row"><div class="t">9:15 am</div><div><p>Tram or drive to <b>Melbourne Museum</b>, 11 Nicholson St, Carlton (in the Carlton Gardens, next to the Royal Exhibition Building). Opens 10am.</p><p class="price">Adult A$18, Child (3–16) free, Concession A$12.</p></div></div>
+    <div class="row"><div class="t">10 am</div><div><p>Start at the <b>Children's Gallery</b> (ground floor, designed for ages 0–8: water play, a giant pretend ecosystem, soft-play caves), then the Dinosaur Walk (a full T-rex skeleton) and the <b>Bunjilaka Aboriginal Cultural Centre</b>. All indoors, plenty of benches, café on-site.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Drive or tram to <b>Queen Victoria Market</b>, 513 Elizabeth St — the Dairy &amp; Deli Hall is fully enclosed and heated, good for a winter lunch. Try a Bratwurst from the German deli stall or a fresh juice from the produce hall.</p><p class="why">If your actual dates land on a Wednesday between June and August, the QVM Winter Night Market runs 5–10pm with fire pits, mulled wine, and global street food — worth swapping into an evening visit instead.</p></div></div>
+    <div class="row"><div class="t">2:30 pm</div><div><p>Walk Hosier Lane (off Flinders St, opposite Federation Square) for the street art, then Centre Place and Degraves St arcades for coffee-shop browsing. All flat, fully walkable, 15–20 min total.</p></div></div>
+    <div class="row"><div class="t">4 pm</div><div><p><b>Koko Black</b>, Royal Arcade (335 Bourke St Mall) — hot chocolate and chocolate-dipped treats. A Melbourne institution, always busy on weekends so expect a short wait.</p><p class="price">~A$8–10 per hot chocolate.</p></div></div>
+    <div class="row"><div class="t">Evening</div><div><p>Dinner at the apartment (Coles/Woolworths run on the way back) or a casual Southbank riverside restaurant if energy allows.</p></div></div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 3 · Mon 7 Jun · Dandenong Ranges</div><h3>Puffing Billy through the misty forest</h3></div><div class="temp">5–12°C in the hills</div></div>
+    <div class="row"><div class="t">8:15 am</div><div><p>Self-drive to <b>Belgrave Station</b>, 1 Old Monbulk Rd, Belgrave VIC 3160 (~50 min–1h from Carlton via the Monash Fwy and Burwood Hwy, no tolls on this route). Free all-day parking is limited near the station — arrive by 9:30am, or alternatively drive straight to <b>Lakeside Station</b> (Emerald Lake Rd) which has more parking and start the ride from there instead.</p></div></div>
+    <div class="row"><div class="t">10:30 am</div><div><p><b>Puffing Billy</b> heritage steam train, Belgrave → Lakeside (the recommended family leg — about 1h each way through misty winter fern gully forest, the original 1900s mountain track, crossing several timber trestle bridges). Sit on the right-hand side facing forward for the best valley views. Kids ride with legs out the open windowsills — bring gloves, it's genuinely cold at speed in June.</p><p class="price">Belgrave–Lakeside return: Adult A$61, Child (4–16) A$31.50, Family (2A+2C) A$153.50. Book online in advance — winter school holidays sell out.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Picnic or café lunch at <b>Lakeside Visitor Centre</b> by Emerald Lake — the Railway Café does hot food (pies, soup, toasties) and there's a playground if the kids need to burn energy before the return trip.</p></div></div>
+    <div class="row"><div class="t">2 pm</div><div><p>Return train to Belgrave, then drive back toward the city.</p></div></div>
+    <div class="row"><div class="t">4 pm</div><div><p>Easy afternoon: NGV International (free general entry), 180 St Kilda Rd, or simply rest at the apartment — tomorrow is the longest day of the trip.</p></div></div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 4 · Tue 8 Jun · Phillip Island → fly to Perth</div><h3>Penguins at dusk, then west</h3></div><div class="temp">8–13°C coast, windy</div></div>
+    <div class="row"><div class="t">8 am</div><div><p>Self-drive to Phillip Island (~1h 50m via the Monash Fwy and South Gippsland Hwy, mostly freeway, no tolls). Pack the car before leaving since you're heading straight to the airport tonight.</p></div></div>
+    <div class="row"><div class="t">10 am</div><div><p><b>Maru Koala &amp; Animal Park</b>, 1650 Bass Hwy, Grantville VIC (on the way to Phillip Island, ~40 min before the island itself) — hand-feed kangaroos and wallabies in the open enclosure, see koalas up close in the treetop walk.</p><p class="price">Adult A$36, Child A$20, Family (2A+2C) A$98 approx.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Continue to Phillip Island. Lunch at <b>Cowes</b> township (Thompson Ave) — fish and chips at the foreshore, or a café on the main strip.</p></div></div>
+    <div class="row"><div class="t">2 pm</div><div><p><b>The Nobbies</b> boardwalk, Ventnor, if wind allows — seal-spotting telescopes overlooking Seal Rocks. Otherwise warm up at the visitor centre café next door.</p></div></div>
+    <div class="row"><div class="t">~5:25 pm</div><div><p><b>Penguin Parade</b>, 1019 Ventnor Rd, Summerlands. Book <b>Penguins Plus</b> — reserved boardwalk seating right beside the penguins' main path from the ocean, ranger commentary, much better value than the A$103 Underground tier for a family of 5.</p><p class="price">Penguins Plus: Adult A$54, Child (4–15) A$28. Arrive 1 hour before penguin arrival time (check the daily posted time — winter sunsets mean it's typically 5:15–5:40pm in June).</p><p class="why">No photography or phone use is permitted during the actual parade — flash and screen light disorient the penguins. Bring a proper jacket; it's an open boardwalk and genuinely cold and windy after dark.</p></div></div>
+    <div class="row"><div class="t">~6:45 pm</div><div><p>Drive back toward Melbourne Airport (~2h direct from Phillip Island, bypassing the city). Grab a quick dinner en route (servo or drive-through) since you'll be checking in for a flight, not sitting down.</p></div></div>
+    <div class="row"><div class="t">Night</div><div><p>Return the hire car at MEL airport, fly to Perth. This is a long day — check both a late-evening and a very-early-next-morning option when booking; a ~9–10pm departure landing Perth around midnight (same timezone, no jet lag) keeps Day 5 fully intact.</p></div></div>
+    <div class="warn"><b>Heads up:</b> this is the single longest day of the trip — wildlife park, penguins, and a night flight back to back. If anyone in the group runs on the slower side, consider dropping The Nobbies and going straight from lunch to a relaxed pre-penguin rest at the visitor centre instead.</div>
+  </div>
+
+  <!-- ══════════ PERTH / MARGARET RIVER ══════════ -->
+  <div class="section-label">Perth &amp; Margaret River · Days 5–8</div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 5 · Wed 9 Jun · Perth</div><h3>Arrive &amp; ease in</h3></div><div class="temp">PER 9–17°C<br>Sunrise 7:08am · Sunset 5:18pm</div></div>
+    <div class="row"><div class="t">Morning</div><div><p>Arrive Perth Airport (PER), collect the WA hire car. WA is UTC+8 in June, same time as Singapore, so there's no body-clock adjustment.</p></div></div>
+    <div class="row"><div class="t">11 am</div><div><p>Drive to <b>Kings Park &amp; Botanic Garden</b>, Fraser Ave, Perth (~15 min from the airport) — 400 hectares of parkland on a ridge above the Swan River, one of the largest inner-city parks in the world. Free entry. Flat paved paths, the Federation Walkway treetop bridge, war memorial, and sweeping river/CBD views.</p></div></div>
+    <div class="row"><div class="t">1 pm</div><div><p>Lunch at the park café (Zamia Café, inside Kings Park) or drive down into the city for something more substantial.</p></div></div>
+    <div class="row"><div class="t">2:30 pm</div><div><p>Drive to <b>Fremantle</b> (~25 min south). <b>Fremantle Markets</b>, corner South Tce &amp; Henderson St, open Friday–Sunday plus public holidays (check the actual June 2027 calendar — if your dates don't land on a market day, swap this for the Fremantle Prison tour or a stroll along the harbour instead).</p></div></div>
+    <div class="row"><div class="t">5 pm</div><div><p>Early dinner on Fremantle's harbour — fish and chips at <b>Cicerello's</b>, Fishing Boat Harbour, is the classic family choice (large portions, casual, harbour views).</p></div></div>
+    <div class="stay"><b>Stay:</b> Fremantle apartment with parking × 1 night — saves backtracking south the next morning and puts you near the Rottnest ferry terminal for Day 8.</div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 6 · Thu 10 Jun · Perth → Margaret River</div><h3>Into the karri forest</h3></div><div class="temp">MR 8–16°C</div></div>
+    <div class="row"><div class="t">9 am</div><div><p>Drive south to Margaret River (~3h via the Forrest Hwy and Bussell Hwy through farmland, then karri and jarrah forest closer to town). Stop in Bunbury or Busselton roughly halfway if anyone needs a break — Busselton Jetty (the longest timber-piled jetty in the Southern Hemisphere) is a good 20-minute leg-stretch.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Lunch in Margaret River town — the main strip (Bussell Hwy) has plenty of cafés; <b>Morries Anytime</b> or <b>Margaret River Bakery</b> are solid family-friendly options.</p></div></div>
+    <div class="row"><div class="t">1:30 pm</div><div><p>Check in to the holiday house, unpack, settle.</p></div></div>
+    <div class="row"><div class="t">3 pm</div><div><p>Drive 10–15 min along Caves Rd to the <b>Margaret River Chocolate Company</b> (Harman's Mill Rd) for free tastings, then the <b>Margaret River Dairy Company</b> or a cheese tasting nearby — both are flat, indoor/covered, and built around small free samples. Easy with kids and a grandparent, no walking required.</p></div></div>
+    <div class="row"><div class="t">Evening</div><div><p>Self-cater dinner at the house — stock up at the Margaret River IGA or Woolworths on the way in.</p></div></div>
+    <div class="stay"><b>Stay:</b> Margaret River holiday house, 3–4 bedrooms, central or just outside town × 2 nights — by far the best per-person value of the trip; look for one with a fireplace or heat pump given the cold nights.</div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 7 · Fri 11 Jun · Margaret River</div><h3>Mammoth Cave &amp; the wild coast</h3></div><div class="temp">8–16°C, cave a constant ~17°C</div></div>
+    <div class="row"><div class="t">9:30 am</div><div><p><b>Mammoth Cave</b>, Caves Rd, Forest Grove (~15 min south of town). Self-guided audio tour, available in English, French, German, Malay, and Mandarin — entry is via a gently sloping boardwalk through bushland, and the cave itself contains fossil remains of extinct Australian megafauna, including a 50,000-year-old jawbone embedded in the wall. Takes about 1 hour.</p><p class="price">Adult A$25, Child (4–16) A$12.50, Senior A$23. Last entry 4pm.</p></div></div>
+    <div class="warn"><b>Correction on accessibility:</b> Mammoth Cave is the easiest of the region's show caves (gentle boardwalk into the first chamber), but the full self-guided loop involves roughly 200 stairs further in and is not wheelchair accessible. It's manageable for most grandparents at a relaxed pace with handrails throughout, but if mobility is a real concern, the visitor centre at the entrance can advise on how far in to go before turning back — there's no obligation to complete the full loop.</div>
+    <div class="row"><div class="t">11:30 am</div><div><p>Optional: <b>Lake Cave</b>, also on Caves Rd (~10 min away) — a striking underground lake, but with a steeper staircase descent than Mammoth Cave. Worth it only if everyone's still keen; otherwise head straight to lunch.</p><p class="price">Adult A$25, Child A$12.50 (similar pricing tier to Mammoth Cave).</p></div></div>
+    <div class="row"><div class="t">1:30 pm</div><div><p>Lunch at a Boranup Forest café or back in Margaret River town, then a 15-minute drive to <b>Canal Rocks</b>, Smiths Beach Rd, Yallingup — a dramatic rock channel with winter swell crashing through. Short, flat boardwalk and lookout, no swimming, great photos.</p></div></div>
+    <div class="row"><div class="t">4 pm</div><div><p>Back to the house. Fire on, early dinner, pack for the early Day 8 start.</p></div></div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 8 · Sat 12 Jun · Rottnest Island → fly to Sydney</div><h3>Quokkas, then east</h3></div><div class="temp">PER 9–17°C</div></div>
+    <div class="row"><div class="t">6:30 am</div><div><p>Early start — pack the car the night before. Drive back to Fremantle (~3h).</p></div></div>
+    <div class="row"><div class="t">9:30–10 am</div><div><p>Check in at <b>Rottnest Express, B Shed Ferry Terminal</b>, Victoria Quay, 1 Peter Hughes Dr, Fremantle. Earliest sailings depart from 7:30am if an earlier start suits better.</p></div></div>
+    <div class="row"><div class="t">10 am</div><div><p>Ferry to <b>Rottnest Island</b> (~25–30 min crossing from Fremantle). Take the <b>90-minute guided island bus tour</b> rather than bike hire — fully air-conditioned, wheelchair accessible, circumnavigates the island past West End, Wadjemup Lighthouse, and Cathedral Rocks (good for spotting seals). Quokka sightings are common at stops along the way.</p><p class="price">Ferry + bus tour package: ~A$95–115/adult, ~A$55–65/child, includes the A$21 adult / A$10.50 child island admission fee.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Free time at Thompson Bay (where the tour ends) — lunch at the Rottnest General Store or the Rottnest Hotel beer garden, a short wander along the white-sand bay.</p></div></div>
+    <div class="row"><div class="t">2 pm</div><div><p>Return ferry to Fremantle.</p><p class="why">Book a specific, guaranteed return sailing time when purchasing — don't rely on an "anytime" open return, since you have a domestic flight to make.</p></div></div>
+    <div class="row"><div class="t">4 pm</div><div><p>Return the hire car at Perth Airport, check in for the PER → SYD flight (~5h).</p></div></div>
+    <div class="row"><div class="t">~9 pm</div><div><p>Land Sydney — a 4pm Perth departure lands around 9pm AEST, since Sydney is 2 hours ahead of Perth in June. Taxi or rideshare to the apartment (no hire car needed in Sydney).</p></div></div>
+    <div class="stay"><b>Stay:</b> Sydney apartment, inner suburbs — Surry Hills, Pyrmont, or Darlinghurst × 2 nights. All are walking distance or one easy transit hop from Circular Quay; parking isn't worth paying for here.</div>
+  </div>
+
+  <!-- ══════════ SYDNEY ══════════ -->
+  <div class="section-label">Sydney · Days 9–10</div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 9 · Sun 13 Jun · Sydney</div><h3>The harbour from the water</h3></div><div class="temp">SYD 10–17°C<br>Sunrise 7:01am · Sunset 4:54pm</div></div>
+    <div class="row"><div class="t">9 am</div><div><p>Walk or transit to <b>Circular Quay</b> — first proper look at the Opera House and Harbour Bridge together. Tap on with a contactless credit/debit card or phone (Apple Pay/Google Pay) directly — no Opal card needed unless you want child concession fares, in which case buy a physical Opal card for the kids at any station/newsagent (min. load A$10 for child cards).</p></div></div>
+    <div class="row"><div class="t">10 am</div><div><p><b>Manly Ferry</b> (the regular F1 service, not the faster private Manly Fast Ferry) — about 30 minutes, working commuter ferry, genuinely one of the best harbour views available at any price. Tap on at Wharf 3, Circular Quay.</p><p class="price">A$10.20 each way per adult on Opal/contactless (Sunday travel is capped at just A$2.80 for the whole day under the Opal Sunday cap — worth timing for a Sunday if your actual dates allow it).</p></div></div>
+    <div class="row"><div class="t">10:30 am</div><div><p>Walk the Manly Corso to the ocean beach side, fish and chips at one of the beachfront cafés, a wander along the promenade. Manly's flat and stroller/wheelchair-friendly throughout.</p></div></div>
+    <div class="row"><div class="t">12:30 pm</div><div><p>Ferry back to Circular Quay.</p></div></div>
+    <div class="row"><div class="t">1:30 pm</div><div><p><b>The Rocks</b> — Sydney's oldest neighbourhood, heritage sandstone laneways just west of the bridge. The Rocks Discovery Museum (free entry, Kendall Lane) gives good context. Weekend markets run Saturdays and Sundays if timing aligns.</p></div></div>
+    <div class="row"><div class="t">3:30 pm</div><div><p>Ferry from Circular Quay (Wharf 4 or 5, ~12 min) to <b>Taronga Zoo</b>, Bradleys Head Rd, Mosman. Opens until 4:30–5pm in winter — check the actual June 2027 closing time when booking, as it's earlier than summer hours.</p><p class="price">Adult ~A$53–58, Child ~A$32–36 (2026 published rates; expect a small increase for 2027). Buying online in advance saves ~10% versus the gate.</p></div></div>
+    <div class="warn"><b>Correction:</b> the original Sky Safari cable car closed in 2023 and its rebuild isn't expected to reopen until late 2027 at the earliest — it will very likely still be closed during this June 2027 visit. Use the free shuttle buses between the lower ferry wharf and the upper main entrance instead, or the Wildlife Express electric train (A$5 each way) which runs through the heart of the zoo. The grandparent should take the bus/train option rather than walking the hill, which is genuinely steep.</div>
+    <div class="row"><div class="t">4 pm</div><div><p>Given the shorter winter opening hours, this is a focused visit rather than a full day — head straight for the free-flight bird show or a keeper talk if timing aligns (check the day's schedule board at the entrance), then the koalas and the new Rhino Reserve.</p></div></div>
+    <div class="row"><div class="t">5 pm</div><div><p>Last ferry back to Circular Quay before the zoo closes for the day; dinner in The Rocks or back near the apartment.</p></div></div>
+  </div>
+
+  <div class="day">
+    <div class="day-head"><div><div class="day-eyebrow">Day 10 · Mon 14 Jun · Sydney → Singapore</div><h3>Blue Mountains in the morning, home by midnight</h3></div><div class="temp">Mountains 4–10°C, pack proper layers</div></div>
+    <div class="row"><div class="t">7:30 am</div><div><p>Hire a car for the day only (parking at Scenic World is A$12 all-day) — easier than the train for a family of 5 with the timing constraints of a flight that evening. Drive ~1h 45m–2h to <b>Katoomba</b> via the M4 and Great Western Hwy.</p></div></div>
+    <div class="row"><div class="t">9:45 am</div><div><p><b>Echo Point</b>, Echo Point Rd, Katoomba — the classic Three Sisters lookout, a flat paved viewing platform right at the car park, no walking required to see the formation.</p></div></div>
+    <div class="row"><div class="t">10:30 am</div><div><p><b>Scenic World</b>, corner Violet St &amp; Cliff Drive, Katoomba (5 min from Echo Point). The Discovery Pass gives unlimited same-day rides on all four attractions: the Scenic Railway (the world's steepest passenger railway, a 52° incline descending 310m — seats recline for adjustable thrill levels, genuinely fun for kids), the glass-floor Scenic Skyway gondola across Jamison Valley, the Scenic Cableway, and the 2.4km elevated rainforest Scenic Walkway through the valley floor.</p><p class="price">Discovery Pass: Adult A$55, Child (4–13) A$30, Family (2A+2C) A$145. Open 9am–5pm.</p><p class="why">The grandparent can do the Cableway and Skyway (both fully accessible, no stairs) and skip the steeper sections of the Walkway, while the rest of the family does the full loop including the Railway.</p></div></div>
+    <div class="row"><div class="t">1 pm</div><div><p>Lunch on the main Katoomba St strip, then drive back to Sydney (~1h 45m–2h, allow extra if it's misty — common in the mountains in winter).</p></div></div>
+    <div class="row"><div class="t">4 pm</div><div><p>Return the hire car at Sydney Airport, check in, last-minute duty free.</p></div></div>
+    <div class="row"><div class="t">Evening</div><div><p>SQ or Scoot SYD → SIN (~8h). An evening departure (~7–9pm) lands Changi around midnight–2am — the rest of the day at home before school resumes.</p></div></div>
+  </div>
+
+  <h2>Budget estimate</h2>
+  <p class="sub">Budget-smart, 5 pax, all figures in SGD (converted from AUD at approximate June 2026 rates). All economy, self-drive in Melbourne and WA only.</p>
+  <table>
+    <thead><tr><th>Item</th><th>Estimate (5 pax)</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><b>Flights</b><div class="cat">SIN–MEL, MEL–PER, PER–SYD, SYD–SIN, all economy</div></td><td>$9,200–12,800</td><td>Compare Jetstar/Scoot/Virgin against SQ/Qantas on every leg. Watch baggage-inclusive fares for 5 pax.</td></tr>
+      <tr><td><b>Accommodation</b><div class="cat">9 nights: 3 MEL, 1 Fremantle, 2 Margaret River house, 2 Sydney apt</div></td><td>$2,300–3,300</td><td>Margaret River house is the best per-person value of the whole trip.</td></tr>
+      <tr><td><b>Car hire</b><div class="cat">MEL 4 days + WA 4 days + Sydney 1 day; fuel, tolls, parking</div></td><td>$1,150–1,650</td><td>Includes CityLink tolls in MEL and Scenic World's A$12 day parking.</td></tr>
+      <tr><td><b>Activities</b><div class="cat">Museum, Puffing Billy, Maru, Penguins Plus, Mammoth Cave, Rottnest, Taronga, Manly Ferry, Scenic World</div></td><td>$2,500–3,400</td><td>Penguins Plus and Rottnest are the two big-ticket items per person; book both 2–3 months ahead, as June school holidays sell out.</td></tr>
+      <tr><td><b>Food</b><div class="cat">~$160–230/day for 5</div></td><td>$1,450–2,050</td><td>Self-cater 3–4 dinners (Melbourne apt + Margaret River house); eat out the rest.</td></tr>
+      <tr><td><b>Local transit (Sydney)</b><div class="cat">Opal/contactless taps for 2 days, 5 pax</div></td><td>$130–220</td><td>Daily adult cap A$19.30 weekdays / A$9.65 weekends — buy physical Opal cards for the kids if concession fares matter.</td></tr>
+      <tr><td><b>Insurance &amp; misc</b><div class="cat">Elderly medical cover, SIMs, souvenirs</div></td><td>$1,000–1,800</td><td>Don't skip travel insurance with adequate medical cover for the grandparent.</td></tr>
+      <tr class="total"><td>TOTAL</td><td>$17,700–25,200</td><td>3 cities, 10 days, all economy, fully self-drive where it matters.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Booking timeline</h2>
+  <table>
+    <thead><tr><th>When</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">~Jul 2026</td><td>All four flights, as soon as June-2027 schedules open (~330 days out).</td></tr>
+      <tr><td class="mono">~Aug–Sep 2026</td><td>Margaret River house, Melbourne apartment, Fremantle apartment, Sydney apartment — whole-home stays for 5 get booked out early in school holidays.</td></tr>
+      <tr><td class="mono">~Sep 2026</td><td>Both hire cars (MEL and WA) — lock in the 7-seater category early; winter rates are good but availability for larger vehicles tightens closer to the date.</td></tr>
+      <tr><td class="mono">~3 months out (Mar 2027)</td><td>Penguins Plus, Rottnest ferry + bus tour — both regularly sell out in school holiday weeks.</td></tr>
+      <tr><td class="mono">~1–2 months out (Apr–May 2027)</td><td>Puffing Billy, Mammoth Cave, Taronga Zoo, Scenic World — all bookable online with enough lead time to guarantee preferred time slots.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Packing notes</h2>
+  <div class="checklist">
+    <div>Thermal base layers (top + bottom) for everyone — coldest points are the Dandenongs (5°C) and Blue Mountains (4°C)</div>
+    <div>Windproof/waterproof outer shell — Phillip Island and Canal Rocks are both exposed and windy</div>
+    <div>Beanie, gloves, scarf — non-negotiable for the open-carriage Puffing Billy ride and the Penguin Parade</div>
+    <div>Enclosed, comfortable walking shoes — required for Mammoth Cave's ~200 stairs</div>
+    <div>Light rain jacket — winter showers are common in all three cities</div>
+    <div>A physical Opal card for each child if concession fares matter in Sydney (adults can just tap a contactless card/phone)</div>
+    <div>Portable phone chargers — long flight + transit days</div>
+    <div>Travel insurance documents with adequate medical cover, especially for the grandparent</div>
+  </div>
+
+  <h2>Tips</h2>
+  <div class="tips">
+    <div class="tip"><b>Time zones to note</b>Melbourne UTC+10 (+2h vs SGT), Perth UTC+8 (same as SGT in June), Sydney UTC+10 (+2h vs SGT). The MEL→PER hop effectively moves the clock back 2 hours.</div>
+    <div class="tip"><b>No car in Sydney</b>Parking and traffic in central Sydney are genuinely painful for visitors. Tap on with any contactless card or phone — no Opal card purchase needed for adults. Only hire a car for the single Blue Mountains day.</div>
+    <div class="tip"><b>Grandparent pacing</b>Mammoth Cave's first chamber is an easy boardwalk (the 200 stairs are deeper in and optional to skip); Rottnest's bus tour is fully accessible; Scenic World's Cableway and Skyway need no stairs at all. Every anchor activity has a low-mobility option built in.</div>
+    <div class="tip"><b>Day 4 is the long one</b>Wildlife park, penguins, then a night flight to Perth back to back. Pack carry-on light so the post-penguin airport transfer is fast, and consider dropping The Nobbies if the day is running behind.</div>
+    <div class="tip"><b>Sky Safari is closed</b>Taronga's cable car won't have reopened by June 2027 — budget a bus/train transfer up the hill instead, not a cable car ride.</div>
+    <div class="tip"><b>Driving notes</b>Right-hand drive like Singapore everywhere. Avoid driving into Melbourne's CBD core — the hook-turn rule confuses most visitors; park at the apartment and tram in instead. WA's Caves Road and Bussell Highway are calm, well-signed, and easy rental driving. In Sydney, the single Day 10 hire car should be returned before evening rush hour builds around the airport.</div>
+  </div>
+
+</div>
+</body>
+</html>
