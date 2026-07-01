@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>omss/f2ff Message Viewer</title>
+<style>
+  body{font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 16px}
+  #form{display:flex;gap:8px}
+  input{flex:1;padding:8px;font-size:16px}
+  button{padding:8px 16px;font-size:16px;cursor:pointer}
+  #error{color:#c00;margin-top:8px;min-height:1.2em}
+  iframe{width:100%;height:80vh;border:1px solid #ccc;margin-top:16px;display:none}
+</style>
+</head>
+<body>
+
+<h2>Enter your code</h2>
+<p><small>OMSS stands for Online Message Sending Service, while f2ff is the header for your key. Key in what's after "f2ff"</small></p>
+<form id="form">
+  <input id="code" type="text" placeholder="e.g. 00abc" autocomplete="off" autofocus>
+  <button type="submit">Go</button>
+</form>
+<div id="error"></div>
+<iframe id="viewer"></iframe>
+
+<script>
+const form = document.getElementById('form');
+const input = document.getElementById('code');
+const errorEl = document.getElementById('error');
+const iframe = document.getElementById('viewer');
+
+let catalog = null;
+
+async function loadCatalog() {
+  try {
+    const res = await fetch('catalog.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    catalog = await res.json();
+  } catch (e) {
+    errorEl.textContent = 'Could not load catalog.json: ' + e.message;
+  }
+}
+loadCatalog();
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  errorEl.textContent = '';
+  iframe.style.display = 'none';
+
+  if (!catalog) {
+    errorEl.textContent = 'Catalog not loaded yet, try again in a moment.';
+    return;
+  }
+
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  // exact match first, then case-insensitive fallback
+  let target = catalog[raw];
+  if (target === undefined) {
+    const lower = raw.toLowerCase();
+    const matchKey = Object.keys(catalog).find(k => k.toLowerCase() === lower);
+    if (matchKey) target = catalog[matchKey];
+  }
+
+  if (target === undefined) {
+    errorEl.textContent = 'Code not found.';
+    return;
+  }
+
+  iframe.src = target;
+  iframe.style.display = 'block';
+});
+</script>
+
+</body>
+</html>
