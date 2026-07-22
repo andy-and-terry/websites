@@ -1,1 +1,1 @@
-setFontID(00000003)
+if (typeof setFontID === "function") setFontID(00000003)

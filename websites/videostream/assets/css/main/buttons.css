@@ -1,11 +1,11 @@
-/* Buttons: white text, black border (and black background so it looks "black") */
+/* Buttons: blue text on white background with a black border */
 button,
 input[type="button"],
 input[type="submit"],
 input[type="reset"] {
   color: #00aafa;
   background: #ffffff;
-  border: 2px solid #ffffff;
+  border: 2px solid #000000;
   font-family: sans-serif;
   cursor: pointer;
 }

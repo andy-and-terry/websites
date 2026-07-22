@@ -6,53 +6,42 @@
   <title>Image Loader</title>
   <style>
     body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; }
-    #results { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-    .img-card { cursor: pointer; border-radius: 8px; overflow: hidden; width: 200px; }
-    .img-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
-    .img-card p { margin: 0; padding: 6px 8px; font-size: 13px; background: #222; }
+    #view { max-width: 720px; margin-top: 20px; }
+    #view img { max-width: 100%; border-radius: 8px; display: block; }
+    #view p { margin: 12px 0 0; font-size: 15px; color: #ddd; }
     .no-results { color: #aaa; }
+    .back-link { display: inline-block; margin-top: 20px; color: #fff; }
   </style>
 </head>
 <body>
 
-  <h2 id="heading">Search Results</h2>
-  <div id="results"></div>
+  <h2 id="heading">Image</h2>
+  <div id="view"></div>
+  <a class="back-link" href="loader.html">← Back to results</a>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const search = params.get('search') || '';
-
-    document.getElementById('heading').innerText = `Results for: "${search}"`;
+    const imageId = params.get('image') || '';
 
     fetch('images.json')
       .then(res => res.json())
       .then(images => {
-        const results = document.getElementById('results');
+        const view = document.getElementById('view');
+        const image = images.find(img => img.id === imageId);
 
-        const matches = images.filter(img =>
-          img.description.toLowerCase().includes(search.toLowerCase())
-        );
-
-        if (matches.length === 0) {
-          results.innerHTML = `<p class="no-results">No images found for "${search}".</p>`;
+        if (!image) {
+          view.innerHTML = `<p class="no-results">Image not found.</p>`;
           return;
         }
 
-        matches.forEach(img => {
-          const card = document.createElement('div');
-          card.className = 'img-card';
-          card.innerHTML = `
-            <img src="${img.src}" alt="${img.description}">
-            <p>${img.description}</p>
-          `;
-          card.addEventListener('click', () => {
-            window.location.href = `view.html?image=${img.id}`;
-          });
-          results.appendChild(card);
-        });
+        document.getElementById('heading').innerText = image.description;
+        view.innerHTML = `
+          <img src="${image.src}" alt="${image.description}">
+          <p>${image.description}</p>
+        `;
       })
       .catch(() => {
-        document.getElementById('results').innerHTML = `<p class="no-results">Failed to load images.json.</p>`;
+        document.getElementById('view').innerHTML = `<p class="no-results">Failed to load images.json.</p>`;
       });
   </script>
 
