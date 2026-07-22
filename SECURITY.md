@@ -6,7 +6,7 @@ If you find a security vulnerability in this website, please report it responsib
 
 Instead:
 
-1. Email us at **[yucheng.le29@gmail.com]** with the details, or
+1. Email us at **[yucheng.lee29@gmail.com]** with the details, or
 2. Use GitHub's [private vulnerability reporting](../../security/advisories/new) on this repo
 
 Please include:

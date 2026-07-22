@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Websites - Hosting and mantaining</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free hosting and maintenance for custom websites, plus AI-generated, human-built, or team-built site creation options.">
+  <title>Websites - Hosting and Maintaining</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,6 +12,19 @@
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      color: #222;
+    }
+
+    a {
+      color: #0c447c;
+    }
+
+    .cards {
+      display: grid;
+      gap: 0.75rem;
     }
     /* Card */
     .card {
@@ -96,32 +111,36 @@
   </style>
 </head>
 <body>
-  <h1>Websites - Hosting and mantaining of custom websites</h1>
+  <h1>Websites - Hosting and Maintaining of Custom Websites</h1>
   <hr>
   <section id="what-we-do">
-  <h2>What we do</h2>
-  <ul>
-    <li>Host websites for <em>free</em></li>
-    <li>Help mantain websites and inform you of problems</li>
-    <li><a href="#creation-info">Custom creation of websites</a></li>
-  </ul>
+    <h2>What we do</h2>
+    <ul>
+      <li>Host websites for <em>free</em></li>
+      <li>Help maintain websites and inform you of problems</li>
+      <li><a href="#creation-info">Custom creation of websites</a></li>
+    </ul>
   </section>
   <br>
   <section id="creation-info">
     <h2>Creation of websites</h2>
-    <div id="card">
-      <h3>Option 1: AI generated</h3>
-      <p>Provide a prompt, select Claude model and wait ~1 week</p>
-      <p><small><i><a href="websites/claude-demo">Why Claude?</a></i></small></p>
-    </div>
-    <div id="card">
-      <h3>Option 2: Human generated</h3>
-      <p>Tell us what you need on the website, better if you can provide a Google Docs or Word document on formatting of page.</p>
-    </div>
-    <div id="card">
-      <h3>Option 3: Team generation <span class="badge badge-red">Limited</span></h3>
-      <p>Tell us your website details and all, a team of experienced people will create your website</p>
+    <div class="cards">
+      <div class="card">
+        <h3 class="card-title">Option 1: AI generated</h3>
+        <p class="card-body">Provide a prompt, select Claude model and wait ~1 week</p>
+        <p><small><i><a href="websites/claude-demo">Why Claude?</a></i></small></p>
+      </div>
+      <div class="card">
+        <h3 class="card-title">Option 2: Human generated</h3>
+        <p class="card-body">Tell us what you need on the website, better if you can provide a Google Docs or Word document on formatting of page.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-title">Option 3: Team generation <span class="badge badge-red">Limited</span></h3>
+        <p class="card-body">Tell us your website details and all, a team of experienced people will create your website</p>
+      </div>
     </div>
     <hr>
     <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd9iy1y0_jOAGwGSu7paMBHxACBhCyM4ZujmrbVbtR1jywRJQ/viewform?usp=publish-editor">Get started!</a></p>
+  </section>
 </body>
+</html>
