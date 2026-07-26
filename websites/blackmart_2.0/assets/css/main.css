@@ -9,7 +9,7 @@
    ROOT / GLOBAL VARIABLES
    ========================= */
 :root {
-  --bg-main: #071a3d;
+  --bg-main: #0A1333;
   --bg-secondary: #0b2454;
   --bg-tertiary: #12306d;
   --text-main: #ffffff;
@@ -332,6 +332,11 @@ canvas,
 svg,
 iframe {
   max-width: 100%;
+}
+
+img {
+  height: auto;
+  display: block;
 }
 
 figure {

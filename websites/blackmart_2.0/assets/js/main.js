@@ -1,4 +1,4 @@
-// main.js – BlackMart 2.0 landing page enhancements
+// main.js – BlackMart 2.0 shared page enhancements
 
 document.addEventListener('DOMContentLoaded', () => {
   // Highlight the current year in the footer copyright if present
