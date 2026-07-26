@@ -57,6 +57,13 @@ if (feed) {
       return res.json();
     })
     .then((files) => {
+      if (!files.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "No community projects yet — check back soon!";
+        feed.appendChild(empty);
+        return;
+      }
       files.forEach((file) => {
         fetch(BASE + file)
           .then((r) => {

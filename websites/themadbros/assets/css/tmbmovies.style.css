@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&display=swap');
+
 /* ===== RESET ===== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   background: #000;
-  color: #fff;
+  color: #f2f2f0;
   overflow-x: hidden;
 }
+h1, h2 { font-family: 'Space Grotesk', sans-serif; }
 
 /* ===== SPLASH ===== */
 #splash {
@@ -18,13 +21,14 @@ body {
   text-align: center;
   z-index: 999;
   animation: splashOut 1s ease forwards;
-  animation-delay: 2.5s;
+  animation-delay: 1.4s;
 }
 
 #splash h1 {
   font-size: 3rem;
-  color: #ff0000;
+  color: #ff3b3b;
   margin-top: 10px;
+  text-shadow: 0 0 24px rgba(255, 59, 59, 0.4);
 }
 
 #splash p {
@@ -39,25 +43,43 @@ body {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  #splash { display: none; }
+  #site { opacity: 1 !important; animation: none !important; }
+}
+
 /* ===== MAIN SITE ===== */
 #site {
   padding: 30px;
   opacity: 0;
   animation: siteIn 1s ease forwards;
-  animation-delay: 3s;
+  animation-delay: 1.6s;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 @keyframes siteIn {
   to { opacity: 1; }
 }
 
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #a8a8a8;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover { color: #ff6b6b; }
+
 /* ===== HEADER ===== */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   border-bottom: 1px solid #222;
-  padding-bottom: 10px;
+  padding-bottom: 14px;
   margin-bottom: 30px;
 }
 
@@ -69,7 +91,7 @@ nav a {
 }
 nav a:hover {
   opacity: 1;
-  color: #ff0000;
+  color: #ff3b3b;
 }
 
 /* ===== SECTIONS ===== */
@@ -78,15 +100,24 @@ section {
 }
 
 h2 {
-  color: #ff0000;
-  margin-bottom: 10px;
+  color: #ff3b3b;
+  margin-bottom: 12px;
 }
 
 .movie {
   border: 1px solid #222;
-  padding: 15px;
+  border-radius: 10px;
+  padding: 18px 20px;
   margin-top: 15px;
 }
+.movie strong { font-family: 'Space Grotesk', sans-serif; }
+.movie hr {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 16px 0;
+}
+.movie p { color: #c9c9c9; }
+.movie p em { color: #888; font-size: 0.85rem; }
 
 /* ===== FOOTER ===== */
 footer {
