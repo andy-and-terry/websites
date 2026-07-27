@@ -1,5 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Telivigala&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #faf5ee;
+  --surface: #ffffff;
+  --ink: #2b241d;
+  --muted: #8a7d6c;
+  --border: #e7ddcd;
+  --accent: #c1502e;
+  --accent-soft: #f3e2d8;
+  --display: 'Akaya Telivigala', cursive;
+  --body: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
 body {
-  font-family: 'Akaya Telivigala', sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  line-height: 1.6;
+}
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 56px 24px 64px; }
+
+h1 {
+  font-family: var(--display);
   font-weight: 400;
-  font-style: normal;
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin: 32px 0 12px;
+  color: var(--accent);
+}
+
+p.lede { color: var(--muted); margin: 0 0 28px; max-width: 50ch; }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover { color: var(--accent); }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+ul.plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+ul.plain li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.card-link {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.card-link:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card-link .go { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+
+.empty-gallery {
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+footer {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
 }
