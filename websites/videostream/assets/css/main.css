@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* =========================================================
-   VideoStream – shared user-area stylesheet
+   VideoStream – shared site-wide stylesheet
    ========================================================= */
 
 *, *::before, *::after {
@@ -227,4 +227,141 @@ a:hover {
   padding: 60px 24px;
   color: var(--text-muted);
   font-size: 1rem;
+}
+
+/* ----- LANDING PAGE ----- */
+.hero {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 90px 24px 60px;
+  text-align: center;
+}
+
+.hero .brand {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.hero h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 8px 0 28px;
+}
+
+.hero p.lede {
+  color: var(--text-muted);
+  max-width: 52ch;
+  margin: 0 auto 32px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 480px;
+  margin: 40px auto 0;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 18px 12px;
+}
+
+.stat-card .value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-card .label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ----- LOGIN / RESET FORMS ----- */
+.auth-wrap {
+  max-width: 380px;
+  margin: 90px auto 0;
+  padding: 0 24px;
+}
+
+.auth-wrap h1, .auth-wrap h2 {
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid #333;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--accent);
+}
+
+#status {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+.auth-wrap hr {
+  border: none;
+  border-top: 1px solid #2a2a2a;
+  margin: 28px 0;
+}
+
+.option {
+  margin-bottom: 20px;
+}
+
+.option h3 {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.option p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.option .disabled-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed #444;
+  cursor: default;
+}
+
+/* ----- CENTERED MESSAGE (e.g. logging out) ----- */
+.centered-msg {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 120px 24px;
+  text-align: center;
+  color: var(--text-muted);
 }

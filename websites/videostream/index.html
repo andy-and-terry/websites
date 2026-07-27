@@ -4,25 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VideoStream</title>
-  <link rel="stylesheet" href="assets/css/main/text.css">
-  <link rel="stylesheet" href="assets/css/main/buttons.css">
-  <script defer src="assets/js/main/drc.js"></script>
+  <meta name="description" content="VideoStream: a lightweight video streaming platform for the Learning for Everyone educational initiative.">
+  <link rel="stylesheet" href="assets/css/main.css">
   <script defer src="assets/js/main/buttons.js"></script>
   <script defer src="assets/js/main/section2info.js"></script>
 </head>
 <body>
-  <h1>VideoStream</h1>
-  <h2>Welcome!</h2>
+  <div class="hero">
+    <div class="brand">VideoStream</div>
+    <h2>Welcome!</h2>
+    <p class="lede">Part of the Learning for Everyone initiative &mdash; log in to browse the catalogue and watch videos in your browser.</p>
 
-  <section id="quickbuttons">
-    <button id="login">Login</button>
-    <!--<button id="more">More</button>-->
-  </section>
+    <section id="quickbuttons">
+      <button id="login" class="btn btn-primary">Login</button>
+      <!--<button id="more">More</button>-->
+    </section>
 
-  <section id="stats">
-    <p>Served: <span id="servedCount">…</span></p>
-    <p>Assignments: <span id="assignmentCount">…</span></p>
-    <p>Users: <span id="userCount">…</span></p>
-  </section>
+    <section class="stats" id="stats">
+      <div class="stat-card"><div class="value" id="servedCount">…</div><div class="label">Served</div></div>
+      <div class="stat-card"><div class="value" id="assignmentCount">…</div><div class="label">Assignments</div></div>
+      <div class="stat-card"><div class="value" id="userCount">…</div><div class="label">Users</div></div>
+    </section>
+  </div>
 </body>
 </html>
