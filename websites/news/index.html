@@ -195,7 +195,9 @@
       const DATA_DIR = 'assets/data/';
       const DISMISSED_KEY = 'latestNewsDismissedBanners';
       const REPORT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd6UTp346XZBlIvx9nAIziC-OitpheKhtS5zcSr74SYxmEC4g/viewform?usp=publish-editor';
-      const ADD_POST_EMAIL = 'yucheng.lee29@gmail.com';
+      // Comment and Add post go to this contact for now. Comment is meant to
+      // move to Web3Forms later once its access key is provided.
+      const CONTACT_EMAIL = 'yucheng.lee29@gmail.com';
       // TODO: paste Web3Forms access key here once available, and enable
       // an autoresponder on the "email" field in the Web3Forms dashboard
       // so reported posts' authors get notified automatically.
@@ -254,14 +256,14 @@
 
       function commentMailto(post) {
         const subject = encodeURIComponent('Comment on: ' + post.title);
-        const body = encodeURIComponent('Hi ' + post.author + ',\n\nRegarding your post "' + post.title + '":\n\n');
-        return 'mailto:' + post.authorEmail + '?subject=' + subject + '&body=' + body;
+        const body = encodeURIComponent('Regarding ' + post.author + '\'s post "' + post.title + '":\n\n');
+        return 'mailto:' + CONTACT_EMAIL + '?subject=' + subject + '&body=' + body;
       }
 
       function addPostMailto() {
         const subject = encodeURIComponent('New post submission for Latest News');
         const body = encodeURIComponent('Title:\nSummary:\nContent:\nImportant (yes/no):\n');
-        return 'mailto:' + ADD_POST_EMAIL + '?subject=' + subject + '&body=' + body;
+        return 'mailto:' + CONTACT_EMAIL + '?subject=' + subject + '&body=' + body;
       }
 
       function actionBarHtml(post) {
