@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "title": "Scheduled maintenance window this weekend",
+  "date": "2026-07-27",
+  "author": "Andy",
+  "authorEmail": "yucheng.lee29@gmail.com",
+  "summary": "Brief downtime expected Saturday night while we upgrade hosting infrastructure.",
+  "content": "We'll be performing scheduled maintenance on our hosting infrastructure this Saturday from 11pm to 1am SGT. Some client sites may be briefly unreachable during this window. No action is needed on your part — everything will be back to normal automatically once the upgrade is complete.",
+  "important": true
+}
