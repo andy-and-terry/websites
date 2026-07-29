@@ -195,8 +195,9 @@
       const DATA_DIR = 'assets/data/';
       const DISMISSED_KEY = 'latestNewsDismissedBanners';
       const REPORT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd6UTp346XZBlIvx9nAIziC-OitpheKhtS5zcSr74SYxmEC4g/viewform?usp=publish-editor';
-      // Comment and Add post go to this contact for now. Comment is meant to
-      // move to Web3Forms later once its access key is provided.
+      const ADD_POST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfDtFivE7wSPK8FkISpylP81XrhLT_94LX0UBf0psgjogZ5Bg/viewform?usp=publish-editor';
+      // Comment goes to this contact for now. It's meant to move to
+      // Web3Forms later once its access key is provided.
       const CONTACT_EMAIL = 'yucheng.lee29@gmail.com';
       // TODO: paste Web3Forms access key here once available, and enable
       // an autoresponder on the "email" field in the Web3Forms dashboard
@@ -260,18 +261,12 @@
         return 'mailto:' + CONTACT_EMAIL + '?subject=' + subject + '&body=' + body;
       }
 
-      function addPostMailto() {
-        const subject = encodeURIComponent('New post submission for Latest News');
-        const body = encodeURIComponent('Title:\nSummary:\nContent:\nImportant (yes/no):\n');
-        return 'mailto:' + CONTACT_EMAIL + '?subject=' + subject + '&body=' + body;
-      }
-
       function actionBarHtml(post) {
         return '' +
           '<div class="post-actions" role="group" aria-label="Post actions">' +
             '<a class="action-btn report-btn" data-id="' + post.id + '" href="' + REPORT_FORM_URL + '" target="_blank" rel="noopener" title="Report this post">Report</a>' +
             '<a class="action-btn" href="' + commentMailto(post) + '" title="Email the author">Comment</a>' +
-            '<a class="action-btn" href="' + addPostMailto() + '" title="Suggest a new post">Add post</a>' +
+            '<a class="action-btn" href="' + ADD_POST_FORM_URL + '" target="_blank" rel="noopener" title="Suggest a new post">Add post</a>' +
           '</div>';
       }
 

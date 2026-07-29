@@ -28,11 +28,11 @@ browser via `localStorage`) until unmarked or removed.
 
 ## Configuration
 
-- **Report** opens a Google Form (URL in `index.html`). Update
-  `REPORT_FORM_URL` if the form changes.
-- **Comment** and **Add post** both open a `mailto:` to `CONTACT_EMAIL`
-  (currently yucheng.lee29@gmail.com) for now. Comment is meant to move to
-  a Web3Forms-backed form later — ask for that change when ready.
+- **Report** opens a Google Form (`REPORT_FORM_URL` in `index.html`).
+- **Add post** opens a Google Form (`ADD_POST_FORM_URL` in `index.html`).
+- **Comment** opens a `mailto:` to `CONTACT_EMAIL` (currently
+  yucheng.lee29@gmail.com) for now. It's meant to move to a
+  Web3Forms-backed form later — ask for that change when ready.
 - Reporting a post also pings [Web3Forms](https://web3forms.com) to notify
   the author (`authorEmail` on the post) it was flagged. Paste your access
   key into `WEB3FORMS_ACCESS_KEY` in `index.html` and enable an
