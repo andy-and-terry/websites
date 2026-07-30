@@ -288,22 +288,6 @@ section:not(.hero):nth-of-type(even) { background: var(--bg-alt); }
 }
 
 /* =====================
-   Ad card (shared network cross-promo, kept unobtrusive)
-   ===================== */
-.ad-slot {
-  max-width: 320px;
-  margin: 0 auto 64px;
-}
-.ad-slot .ad-tag {
-  text-align: center;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-/* =====================
    Footer
    ===================== */
 .site-footer {

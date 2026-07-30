@@ -3,35 +3,31 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script defer src="main.js"></script>
+	<link rel="stylesheet" href="../assets/css/main.css">
 	<title>Login to platform</title>
 </head>
 <body>
-	
 
-<h2>Login</h2>
+<div class="auth-wrap">
+  <h1>Login</h1>
 
-<div>
-  <label>
-    Username:
+  <div class="field">
+    <label for="username">Username</label>
     <input id="username" autocomplete="username">
-  </label>
-</div>
+  </div>
 
-<div>
-  <label>
-    Password:
+  <div class="field">
+    <label for="password">Password</label>
     <input id="password" type="password" autocomplete="current-password">
-  </label>
+  </div>
+
+  <button id="loginBtn" class="btn btn-primary">Login</button>
+
+  <p id="status"></p>
+  <hr>
+  <p><a href="reset.html">Forgot Password..?</a></p>
 </div>
 
-<button id="loginBtn">Login</button>
-
-<p id="status"></p>
-<br>
-<hr>
-<p><a href="reset.html">Forgot Password..?</a></p>
 <script>
 async function hashPassword(password, saltBase64) {
   const salt = Uint8Array.from(atob(saltBase64), c => c.charCodeAt(0));

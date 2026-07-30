@@ -2,27 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Photo Library</title>
-  <script defer src="https://raw.githubusercontent.com/andy-and-terry/littleplugins/refs/heads/plugins-data/QuickGooglefonts/fontpicker.js"></script>
-  <script async src="assets/js/config.js"></script>
-  <script defer src="https://raw.githubusercontent.com/andy-and-terry/littleplugins/refs/heads/plugins-data/antidev/antidev.js"></script>
-  <script async src="assets/js/loader.js"></script>
-  <script async src="assets/js/jsdebugger.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse the photo library by category.">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <noscript>
-    <h1>This page requires Javascript to run properly.</h1>
-    <p><small><span id="tester">Javascript Disabled</span></small></p>
-  </noscript>
-  <h1>Photo Library</h1>
-  <hr>
-  <h3>Browse through our images...</h3>
-  <span id="main-list">
-    <p><i>Loading options...</i></p>
-    <p><i><small>If this does not load after a minute or two, your browser may have a problem.</small></i></p>
-  </span>
-  <hr>
-  <footer>&copy; Photo Library | 2026</footer>
+  <div class="wrap">
+    <h1>Photo Library</h1>
+    <p class="lede">Browse through our images by category.</p>
+    <hr>
+    <h2>Categories</h2>
+    <ul class="categories">
+      <li><a href="images/loader.html?search=all">All images</a></li>
+      <li><a href="images/loader.html?search=nature">Nature</a></li>
+      <li><a href="images/loader.html?search=things">Things</a></li>
+      <li><a href="images/loader.html?search=animals">Animals</a></li>
+      <li><a href="images/loader.html?search=places">Places</a></li>
+    </ul>
+    <hr>
+    <footer>&copy; Photo Library | 2026</footer>
+  </div>
 </body>
 </html>

@@ -4,35 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Loader</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-    body { font-family: "nunito", "nunito sans", "Sans Serif"; padding: 20px; background: #111; color: #fff; }
-    #results { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-    .img-card { cursor: pointer; border-radius: 8px; overflow: hidden; width: 200px; }
-    .img-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
-    .img-card p { margin: 0; padding: 6px 8px; font-size: 13px; background: #222; }
-    .no-results { color: #aaa; }
-  </style>
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-
-  <h2 id="heading">Search Results</h2>
-  <div id="results"></div>
+  <div class="wrap">
+    <a class="back-link" href="../">&larr; Back to Photo Library</a>
+    <h1 id="heading">Search Results</h1>
+    <div class="results" id="results"></div>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const search = params.get('search') || '';
 
-    document.getElementById('heading').innerText = `Results for: "${search}"`;
+    document.getElementById('heading').textContent = search === 'all' ? 'All images' : `Results for: "${search}"`;
 
     fetch('images.json')
       .then(res => res.json())
       .then(images => {
         const results = document.getElementById('results');
 
-        const matches = images.filter(img =>
-          img.description.toLowerCase().includes(search.toLowerCase())
-        );
+        const matches = search === 'all'
+          ? images
+          : images.filter(img => img.description.toLowerCase().includes(search.toLowerCase()));
 
         if (matches.length === 0) {
           results.innerHTML = `<p class="no-results">No images found for "${search}".</p>`;
@@ -56,6 +50,5 @@
         document.getElementById('results').innerHTML = `<p class="no-results">Failed to load images.json.</p>`;
       });
   </script>
-
 </body>
 </html>

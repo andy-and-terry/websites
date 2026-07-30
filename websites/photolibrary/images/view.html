@@ -3,21 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Loader</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; }
-    #view { max-width: 720px; margin-top: 20px; }
-    #view img { max-width: 100%; border-radius: 8px; display: block; }
-    #view p { margin: 12px 0 0; font-size: 15px; color: #ddd; }
-    .no-results { color: #aaa; }
-    .back-link { display: inline-block; margin-top: 20px; color: #fff; }
-  </style>
+  <title>Image Viewer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-
-  <h2 id="heading">Image</h2>
-  <div id="view"></div>
-  <a class="back-link" href="loader.html">← Back to results</a>
+  <div class="wrap">
+    <a class="back-link" href="loader.html">&larr; Back to results</a>
+    <h1 id="heading">Image</h1>
+    <div id="view"></div>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -34,7 +28,7 @@
           return;
         }
 
-        document.getElementById('heading').innerText = image.description;
+        document.getElementById('heading').textContent = image.description;
         view.innerHTML = `
           <img src="${image.src}" alt="${image.description}">
           <p>${image.description}</p>
@@ -44,6 +38,5 @@
         document.getElementById('view').innerHTML = `<p class="no-results">Failed to load images.json.</p>`;
       });
   </script>
-
 </body>
 </html>

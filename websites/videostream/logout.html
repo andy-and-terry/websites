@@ -2,14 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <title>Logging out...</title>
   <script>
     localStorage.clear();
     window.location.replace("index.html");
   </script>
-  <title>Logging out...</title>
 </head>
 <body>
-  <p>Please wait a moment...</p>
-  <p>If nothing happens after a few seconds, click <a href="index.html">here</a>.</p>
+  <div class="centered-msg">
+    <p>Please wait a moment...</p>
+    <p>If nothing happens after a few seconds, click <a href="index.html">here</a>.</p>
+  </div>
 </body>
 </html>

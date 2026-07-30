@@ -4,27 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LYX website</title>
+  <meta name="description" content="LYX's Art Website: we make, buy, and sell art. Browse the artwork gallery.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/configure.css">
 </head>
 <body>
-  <h1>Welcome to LYX's Art Website!</h1>
-  <hr>
-  <section id="wedo">
-    <h3>What we do</h3>
-    <ul>
-      <li>We make art</li>
-      <li>We sell/buy art</li>
-    </ul>
-  </section>
-  <br>
-  <section id="options">
-    <h3>Jump to our branches...</h3>
-    <p><a href="artworks/">Artwork Gallery</a></p>
-  </section>
-  <hr>
-  <footer>LYX's Art website | &copy; 2026</footer>
+  <div class="wrap">
+    <h1>Welcome to LYX's Art Website!</h1>
+    <p class="lede">A small studio that makes, buys, and sells art.</p>
+    <hr>
+    <section id="wedo">
+      <h3>What we do</h3>
+      <ul class="plain">
+        <li>We make art</li>
+        <li>We sell/buy art</li>
+      </ul>
+    </section>
+    <section id="options">
+      <h3>Jump to our branches&hellip;</h3>
+      <a class="card-link" href="artworks/">
+        Artwork Gallery
+        <div class="go">Browse &rarr;</div>
+      </a>
+    </section>
+    <hr>
+    <footer>LYX's Art website | &copy; 2026</footer>
+  </div>
 </body>
 </html>

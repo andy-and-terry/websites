@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #121212;
+  --surface: #1a1a1a;
+  --border: #2c2c2c;
+  --text: #f2f0ec;
+  --muted: #a3a09a;
+  --accent: #e8b96a;
+  --display: 'Fraunces', serif;
+  --body: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  line-height: 1.6;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 56px 24px 64px; }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover { color: var(--accent); }
+
+h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 2.8rem);
+  margin: 0 0 10px;
+}
+
+h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin: 0 0 6px;
+}
+
+p.lede { color: var(--muted); margin: 0 0 32px; max-width: 52ch; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+.categories {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.categories a {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.categories a:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+}
+.img-card {
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.img-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.img-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
+.img-card p { margin: 0; padding: 10px 12px; font-size: 0.82rem; color: var(--muted); }
+.no-results { color: var(--muted); }
+
+#view img { max-width: 100%; border-radius: 14px; display: block; border: 1px solid var(--border); }
+#view p { margin: 16px 0 0; color: var(--muted); }
+
+footer {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}

@@ -3,16 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose a platform – Editor for Hardware</title>
+  <title>Editor for Hardware</title>
+  <meta name="description" content="A code editor built for hardware — currently supporting micro:bit, with Raspberry Pi on the way.">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <h1>Choose your platform</h1>
-  <hr>
-  <ul>
-    <li><a href="microbiteditor/">micro:bit</a></li>
-    <li><a href="pi/">Raspberry Pi</a> <small>(coming soon)</small></li>
-  </ul>
-  <hr>
-  <footer>By thecoders</footer>
+  <div class="wrap">
+    <span class="eyebrow">by thecoders</span>
+    <h1>Editor for Hardware</h1>
+    <p class="lede">One editor, built for the boards you're actually coding on. Pick your platform to get started.</p>
+
+    <div class="platforms">
+      <a class="platform" href="microbiteditor/">
+        <div>
+          <div class="platform-name">micro:bit</div>
+          <div class="platform-sub">Choose your micro:bit version</div>
+        </div>
+        <span class="status ready">Available</span>
+      </a>
+      <div class="platform disabled">
+        <div>
+          <div class="platform-name">Raspberry Pi</div>
+          <div class="platform-sub">Support is on the way</div>
+        </div>
+        <span class="status soon">Coming soon</span>
+      </div>
+    </div>
+
+    <footer>By thecoders</footer>
+  </div>
 </body>
 </html>

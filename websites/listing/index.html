@@ -4,19 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Listing</title>
+  <meta name="description" content="Find unwanted and recycled items at a low cost, browse the Pixel Mart catalogue below.">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-    body{
-      font-family: "Nunito", "Sans Serif"
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&display=swap');
+
+    :root {
+      --bg: #101418;
+      --panel: #1a2027;
+      --border: #222a33;
+      --ink: #e8edf2;
+      --muted: #8b97a3;
+      --accent: #ffb627;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 60px; }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin: 0 0 8px;
+    }
+    p.lede { color: var(--muted); margin: 0 0 28px; max-width: 56ch; }
+    iframe {
+      width: 100%;
+      height: 720px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
-  <h1>Listings</h1>
-  <br>
-  <p>Find unwanted/recycled items at a low cost!</p>
-  <iframe style="border:1px #000000 solid" src="loader/index.html" title="Loader" width="100%" height="600px" scrolling="yes" frameborder="yes" allow=""></iframe>
-  <hr>
-  <footer>&copy; Listing service 2026</footer>
+  <div class="wrap">
+    <h1>Listings</h1>
+    <p class="lede">Find unwanted and recycled items at a low cost &mdash; browse the catalogue below and place an order in a couple of clicks.</p>
+    <iframe src="loader/index.html" title="Product listing"></iframe>
+    <footer>&copy; Listing service 2026</footer>
+  </div>
 </body>
 </html>
