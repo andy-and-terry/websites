@@ -190,179 +190,494 @@
     <p>Loading news&hellip;</p>
   </div>
 
-  <script>
-    (function () {
-      const DATA_DIR = 'assets/data/';
-      const DISMISSED_KEY = 'latestNewsDismissedBanners';
-      const REPORT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd6UTp346XZBlIvx9nAIziC-OitpheKhtS5zcSr74SYxmEC4g/viewform?usp=publish-editor';
-      const ADD_POST_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfDtFivE7wSPK8FkISpylP81XrhLT_94LX0UBf0psgjogZ5Bg/viewform?usp=publish-editor';
-      // Comment goes to this contact for now. It's meant to move to
-      // Web3Forms later once its access key is provided.
-      const CONTACT_EMAIL = 'yucheng.lee29@gmail.com';
-      // TODO: paste Web3Forms access key here once available, and enable
-      // an autoresponder on the "email" field in the Web3Forms dashboard
-      // so reported posts' authors get notified automatically.
-      const WEB3FORMS_ACCESS_KEY = '';
+<script>
+  (() => {
+    "use strict";
 
-      function getDismissed() {
-        try {
-          return JSON.parse(localStorage.getItem(DISMISSED_KEY) || '[]');
-        } catch (err) {
-          return [];
-        }
+    const DATA_DIR = "assets/data/";
+    const DISMISSED_KEY = "latestNewsDismissedBanners";
+
+    const REPORT_FORM_URL =
+      "https://docs.google.com/forms/d/e/1FAIpQLSd6UTp346XZBlIvx9nAIziC-OitpheKhtS5zcSr74SYxmEC4g/viewform?usp=publish-editor";
+
+    const ADD_POST_FORM_URL =
+      "https://docs.google.com/forms/d/e/1FAIpQLSfDtFivE7wSPK8FkISpylP81XrhLT_94LX0UBf0psgjogZ5Bg/viewform?usp=publish-editor";
+
+    const CONTACT_EMAIL = "yucheng.lee29@gmail.com";
+
+    const WEB3FORMS_ACCESS_KEY = "";
+
+    const postList = document.getElementById("post-list");
+    const bannerContainer = document.getElementById("banners");
+
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value ?? "";
+      return div.innerHTML;
+    }
+
+
+    function getDismissed() {
+      try {
+        const value = localStorage.getItem(DISMISSED_KEY);
+        const parsed = JSON.parse(value || "[]");
+
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        console.warn("Unable to read dismissed banners.", err);
+        return [];
       }
+    }
 
-      function dismissBanner(id) {
+
+    function dismissBanner(id) {
+      try {
         const dismissed = getDismissed();
+
         if (!dismissed.includes(id)) {
           dismissed.push(id);
-          localStorage.setItem(DISMISSED_KEY, JSON.stringify(dismissed));
+
+          localStorage.setItem(
+            DISMISSED_KEY,
+            JSON.stringify(dismissed)
+          );
         }
+      } catch (err) {
+        console.warn("Unable to save dismissed banner.", err);
+      }
+    }
+
+
+    async function fetchJson(url) {
+      const response = await fetch(url, {
+        cache: "no-cache"
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `${url} returned HTTP ${response.status}`
+        );
       }
 
-      function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = str == null ? '' : String(str);
-        return div.innerHTML;
+      try {
+        return await response.json();
+      } catch (err) {
+        throw new Error(
+          `${url} contains invalid JSON`
+        );
+      }
+    }
+
+
+    function isValidPost(post) {
+      return (
+        post &&
+        typeof post === "object" &&
+        typeof post.id === "number" &&
+        typeof post.title === "string" &&
+        typeof post.author === "string" &&
+        typeof post.date === "string"
+      );
+    }
+    async function loadPosts() {
+      const main = await fetchJson(
+        DATA_DIR + "main.json"
+      );
+
+      if (!Array.isArray(main.posts)) {
+        throw new Error(
+          "main.json must contain a posts array."
+        );
       }
 
-      async function loadPosts() {
-        const mainRes = await fetch(DATA_DIR + 'main.json');
-        const main = await mainRes.json();
-        const files = main.posts || [];
-        const posts = await Promise.all(files.map(async (file) => {
-          const res = await fetch(DATA_DIR + file);
-          return res.json();
-        }));
-        return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const results = await Promise.allSettled(
+        main.posts.map(async (filename) => {
+          try {
+            const post = await fetchJson(
+              DATA_DIR + filename
+            );
+
+            if (!isValidPost(post)) {
+              throw new Error(
+                "Invalid post structure."
+              );
+            }
+
+            return post;
+          } catch (err) {
+            console.warn(
+              `Skipping "${filename}"`,
+              err
+            );
+
+            return null;
+          }
+        })
+      );
+
+      return results
+        .filter((result) => {
+          return result.status === "fulfilled";
+        })
+        .map((result) => {
+          return result.value;
+        })
+        .filter(Boolean)
+        .sort((a, b) => {
+          const dateA = Date.parse(a.date);
+          const dateB = Date.parse(b.date);
+
+          return (
+            (Number.isNaN(dateB) ? 0 : dateB) -
+            (Number.isNaN(dateA) ? 0 : dateA)
+          );
+        });
+    }
+
+
+    function commentMailto(post) {
+      const subject = encodeURIComponent(
+        "Comment on: " + post.title
+      );
+
+      const body = encodeURIComponent(
+        "Regarding " +
+        post.author +
+        "'s post \"" +
+        post.title +
+        "\":\n\n"
+      );
+
+      return (
+        "mailto:" +
+        CONTACT_EMAIL +
+        "?subject=" +
+        subject +
+        "&body=" +
+        body
+      );
+    }
+
+
+    async function notifyAuthorOfReport(post) {
+      if (
+        !WEB3FORMS_ACCESS_KEY ||
+        !post ||
+        !post.authorEmail
+      ) {
+        return;
       }
 
-      async function notifyAuthorOfReport(post) {
-        if (!WEB3FORMS_ACCESS_KEY || !post.authorEmail) return;
-        try {
-          await fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      try {
+        await fetch(
+          "https://api.web3forms.com/submit",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
             body: JSON.stringify({
               access_key: WEB3FORMS_ACCESS_KEY,
-              subject: 'Your post was flagged: ' + post.title,
+              subject:
+                "Your post was flagged: " +
+                post.title,
               email: post.authorEmail,
-              message: 'Your post "' + post.title + '" was just reported by a reader on Latest News.'
+              message:
+                "Your post \"" +
+                post.title +
+                "\" was reported by a reader."
             })
-          });
-        } catch (err) {
-          console.error('Web3Forms notify failed', err);
-        }
+          }
+        );
+      } catch (err) {
+        console.warn(
+          "Unable to notify author.",
+          err
+        );
       }
+    }
 
-      function commentMailto(post) {
-        const subject = encodeURIComponent('Comment on: ' + post.title);
-        const body = encodeURIComponent('Regarding ' + post.author + '\'s post "' + post.title + '":\n\n');
-        return 'mailto:' + CONTACT_EMAIL + '?subject=' + subject + '&body=' + body;
-      }
 
-      function actionBarHtml(post) {
-        return '' +
-          '<div class="post-actions" role="group" aria-label="Post actions">' +
-            '<a class="action-btn report-btn" data-id="' + post.id + '" href="' + REPORT_FORM_URL + '" target="_blank" rel="noopener" title="Report this post">Report</a>' +
-            '<a class="action-btn" href="' + commentMailto(post) + '" title="Email the author">Comment</a>' +
-            '<a class="action-btn" href="' + ADD_POST_FORM_URL + '" target="_blank" rel="noopener" title="Suggest a new post">Add post</a>' +
-          '</div>';
-      }
+    function actionBar(post) {
+      return `
+        <div class="post-actions"
+             role="group"
+             aria-label="Post actions">
 
-      function openPost(card) {
-        document.querySelectorAll('.post-card.open').forEach(function (c) {
-          if (c !== card) c.classList.remove('open');
+          <a class="action-btn report-btn"
+             data-id="${post.id}"
+             href="${REPORT_FORM_URL}"
+             target="_blank"
+             rel="noopener"
+             title="Report this post">
+            Report
+          </a>
+
+          <a class="action-btn"
+             href="${commentMailto(post)}"
+             title="Email the author">
+            Comment
+          </a>
+
+          <a class="action-btn"
+             href="${ADD_POST_FORM_URL}"
+             target="_blank"
+             rel="noopener"
+             title="Suggest a new post">
+            Add post
+          </a>
+
+        </div>
+      `;
+    }
+
+
+    function openPost(card) {
+      document
+        .querySelectorAll(".post-card.open")
+        .forEach((item) => {
+          if (item !== card) {
+            item.classList.remove("open");
+          }
         });
-        card.classList.toggle('open');
-      }
 
-      function renderBanners(posts) {
-        const dismissed = getDismissed();
-        const container = document.getElementById('banners');
-        const important = posts.filter(function (p) {
-          return p.important && !dismissed.includes(p.id);
-        });
+      card.classList.toggle("open");
+    }
+    function renderPosts(posts) {
+      const postsById = new Map(
+        posts.map((post) => {
+          return [post.id, post];
+        })
+      );
 
-        container.innerHTML = important.map(function (p) {
-          return '' +
-            '<div class="banner" data-id="' + p.id + '">' +
-              '<div class="banner-text">' +
-                '<strong>' + escapeHtml(p.title) + '</strong>' +
-                '<span>' + escapeHtml(p.summary || '') + '</span>' +
-              '</div>' +
-              '<button class="banner-close" aria-label="Dismiss">&times;</button>' +
-            '</div>';
-        }).join('');
+      postList.innerHTML = posts.map((post) => {
+        return `
+          <article class="post-card"
+                   data-id="${post.id}"
+                   tabindex="0">
 
-        container.querySelectorAll('.banner-close').forEach(function (btn) {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const banner = e.target.closest('.banner');
-            dismissBanner(Number(banner.dataset.id));
-            banner.remove();
-          });
-        });
+            ${actionBar(post)}
 
-        container.querySelectorAll('.banner').forEach(function (banner) {
-          banner.addEventListener('click', function () {
-            const id = Number(banner.dataset.id);
-            const card = document.querySelector('.post-card[data-id="' + id + '"]');
-            if (card) {
-              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              if (!card.classList.contains('open')) openPost(card);
+            <h3 class="post-title">
+              ${escapeHtml(post.title)}
+              ${
+                post.important
+                  ? '<span class="badge badge-red">Important</span>'
+                  : ""
+              }
+            </h3>
+
+            <p class="post-meta">
+              ${escapeHtml(post.date)}
+              &middot;
+              ${escapeHtml(post.author)}
+            </p>
+
+            <p class="post-summary">
+              ${escapeHtml(post.summary || "")}
+            </p>
+
+            <p class="post-content">
+              ${post.content || ""}
+            </p>
+
+          </article>
+        `;
+      }).join("");
+
+
+      document
+        .querySelectorAll(".post-card")
+        .forEach((card) => {
+
+          card.addEventListener(
+            "click",
+            () => {
+              openPost(card);
             }
-          });
-        });
-      }
+          );
 
-      function renderPosts(posts) {
-        const postsById = new Map(posts.map(function (p) { return [p.id, p]; }));
-        const list = document.getElementById('post-list');
 
-        list.innerHTML = posts.map(function (p) {
-          return '' +
-            '<article class="post-card" data-id="' + p.id + '" tabindex="0">' +
-              actionBarHtml(p) +
-              '<h3 class="post-title">' + escapeHtml(p.title) + (p.important ? ' <span class="badge badge-red">Important</span>' : '') + '</h3>' +
-              '<p class="post-meta">' + escapeHtml(p.date) + ' &middot; ' + escapeHtml(p.author) + '</p>' +
-              '<p class="post-summary">' + escapeHtml(p.summary || '') + '</p>' +
-              '<p class="post-content">' + (p.content || '') + '</p>' +
-            '</article>';
-        }).join('');
+          card.addEventListener(
+            "keypress",
+            (event) => {
+              if (event.key === "Enter") {
+                openPost(card);
+              }
+            }
+          );
 
-        list.querySelectorAll('.post-card').forEach(function (card) {
-          card.addEventListener('click', function () {
-            openPost(card);
-          });
-          card.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') openPost(card);
-          });
         });
 
-        list.querySelectorAll('.report-btn').forEach(function (btn) {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const post = postsById.get(Number(btn.dataset.id));
-            if (post) notifyAuthorOfReport(post);
-          });
+
+      document
+        .querySelectorAll(".report-btn")
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            (event) => {
+              event.stopPropagation();
+
+              const post = postsById.get(
+                Number(button.dataset.id)
+              );
+
+              notifyAuthorOfReport(post);
+            }
+          );
+
         });
 
-        list.querySelectorAll('.action-btn:not(.report-btn)').forEach(function (btn) {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-          });
-        });
-      }
 
-      loadPosts().then(function (posts) {
+      document
+        .querySelectorAll(".action-btn")
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            (event) => {
+              event.stopPropagation();
+            }
+          );
+
+        });
+    }
+
+
+    function renderBanners(posts) {
+      const dismissed = getDismissed();
+
+      const importantPosts = posts.filter((post) => {
+        return (
+          post.important &&
+          !dismissed.includes(post.id)
+        );
+      });
+
+
+      bannerContainer.innerHTML =
+        importantPosts.map((post) => {
+
+          return `
+            <div class="banner"
+                 data-id="${post.id}">
+
+              <div class="banner-text">
+
+                <strong>
+                  ${escapeHtml(post.title)}
+                </strong>
+
+                <span>
+                  ${escapeHtml(post.summary || "")}
+                </span>
+
+              </div>
+
+
+              <button class="banner-close"
+                      aria-label="Dismiss">
+                &times;
+              </button>
+
+            </div>
+          `;
+
+        }).join("");
+
+
+      bannerContainer
+        .querySelectorAll(".banner")
+        .forEach((banner) => {
+
+          banner.addEventListener(
+            "click",
+            () => {
+
+              const card =
+                document.querySelector(
+                  `.post-card[data-id="${banner.dataset.id}"]`
+                );
+
+
+              if (!card) {
+                return;
+              }
+
+
+              card.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+              });
+
+
+              if (!card.classList.contains("open")) {
+                openPost(card);
+              }
+
+            }
+          );
+
+
+          banner
+            .querySelector(".banner-close")
+            .addEventListener(
+              "click",
+              (event) => {
+
+                event.stopPropagation();
+
+                dismissBanner(
+                  Number(banner.dataset.id)
+                );
+
+                banner.remove();
+
+              }
+            );
+
+        });
+    }
+
+
+    async function init() {
+      try {
+        const posts = await loadPosts();
+
+
+        if (posts.length === 0) {
+          postList.innerHTML =
+            "<p>No news posts are available.</p>";
+
+          return;
+        }
+
+
         renderBanners(posts);
         renderPosts(posts);
-      }).catch(function (err) {
-        document.getElementById('post-list').innerHTML = '<p>Unable to load news right now.</p>';
-        console.error(err);
-      });
-    })();
-  </script>
+
+      } catch (err) {
+        console.error(
+          "News loading failed:",
+          err
+        );
+
+        postList.innerHTML = `
+          <p>
+            Unable to load the news feed.
+            Please try again later.
+          </p>
+        `;
+      }
+    }
+
+
+    init();
+
+  })();
+</script>
 </body>
 </html>
