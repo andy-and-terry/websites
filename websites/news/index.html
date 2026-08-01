@@ -327,7 +327,7 @@
               '<h3 class="post-title">' + escapeHtml(p.title) + (p.important ? ' <span class="badge badge-red">Important</span>' : '') + '</h3>' +
               '<p class="post-meta">' + escapeHtml(p.date) + ' &middot; ' + escapeHtml(p.author) + '</p>' +
               '<p class="post-summary">' + escapeHtml(p.summary || '') + '</p>' +
-              '<p class="post-content">' + escapeHtml(p.content || '') + '</p>' +
+              '<p class="post-content">' + (p.content || '') + '</p>' +
             '</article>';
         }).join('');
 
