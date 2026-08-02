@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Live</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0;background:#111;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;">
+
+<div id="choice">
+  <h2>Choose</h2>
+  <button onclick="showStream()">Streaming</button>
+  <button onclick="showWatch()">Watching</button>
+</div>
+
+<div id="streamForm" style="display:none;">
+  <h3>Broadcast Info</h3>
+  <input id="playerID" placeholder="Player ID"><br><br>
+  <input id="streamPass" type="password" placeholder="Password"><br><br>
+  <button onclick="startStream()">Get Upload Command</button>
+  <pre id="streamOut"></pre>
+</div>
+
+<div id="watchForm" style="display:none;">
+  <h3>Watch</h3>
+  <input id="watchPass" type="password" placeholder="Password (if required)"><br><br>
+  <button onclick="startWatch()">Watch</button>
+  <p id="watchError" style="color:red;"></p>
+</div>
+
+<video id="v" controls autoplay muted style="display:none;width:100vw;height:100vh;position:fixed;top:0;left:0;"></video>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script>
+  var BASE = "https://andyandterry--ab264a0c8e0611f1a61f1607ee4eb77e.web.val.run";
+
+  function showStream() {
+    document.getElementById('choice').style.display = 'none';
+    document.getElementById('streamForm').style.display = 'block';
+  }
+  function showWatch() {
+    document.getElementById('choice').style.display = 'none';
+    document.getElementById('watchForm').style.display = 'block';
+  }
+
+  function startStream() {
+    var playerID = document.getElementById('playerID').value;
+    var pass = document.getElementById('streamPass').value;
+    if (!playerID || !pass) { alert('Fill both fields'); return; }
+    var cmd = 'curl -X POST ' + BASE + '/?filename=FILENAME&playerID=' + encodeURIComponent(playerID) + '&password=' + encodeURIComponent(pass) + ' --data-binary @FILENAME';
+    document.getElementById('streamOut').textContent = 'Use this in your push script: ' + cmd;
+  }
+
+  function startWatch() {
+    var pass = document.getElementById('watchPass').value;
+    var testUrl = BASE + '/playlist.m3u8' + (pass ? '?password=' + encodeURIComponent(pass) : '');
+
+    fetch(testUrl, { method: 'GET' }).then(function(res) {
+      if (res.status === 403) {
+        document.getElementById('watchError').textContent = 'Wrong password';
+        return;
+      }
+      if (res.status === 404) {
+        document.getElementById('watchError').textContent = 'Stream not live yet';
+        return;
+      }
+      document.getElementById('watchForm').style.display = 'none';
+      var video = document.getElementById('v');
+      video.style.display = 'block';
+
+      if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(testUrl);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = testUrl;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
