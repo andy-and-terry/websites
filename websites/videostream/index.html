@@ -9,7 +9,7 @@
 <div id="choice">
   <h2>Choose</h2>
   <button onclick="showStream()">Streaming</button>
-  <button onclick="showWatch()" autofocus>Watching</button>
+  <button onclick="showWatch()">Watching</button>
 </div>
 
 <div id="streamForm" style="display:none;">
@@ -33,6 +33,30 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
 <script>
   var BASE = "https://andyandterry--ab264a0c8e0611f1a61f1607ee4eb77e.web.val.run";
+
+  var currentStreamID = null;
+  var viewerId = Math.random().toString(36).slice(2);
+  var heartbeatTimer = null;
+  var fetchIntervalMs = 2000; // default until we know viewer count
+
+  function computeFetchInterval(viewerCount) {
+    var perViewerFetchesPerMin = Math.max(1, Math.floor(1000 / viewerCount));
+    return Math.round(60000 / perViewerFetchesPerMin);
+  }
+
+  function startHeartbeat(streamID) {
+    currentStreamID = streamID;
+    async function tick() {
+      try {
+        await fetch(BASE + '/heartbeat?streamID=' + encodeURIComponent(streamID) + '&viewerId=' + viewerId, { method: 'POST' });
+        var res = await fetch(BASE + '/viewercount?streamID=' + encodeURIComponent(streamID));
+        var json = await res.json();
+        fetchIntervalMs = computeFetchInterval(json.count || 1);
+      } catch (e) {}
+    }
+    tick();
+    heartbeatTimer = setInterval(tick, 5000);
+  }
 
   function showStream() {
     document.getElementById('choice').style.display = 'none';
@@ -74,10 +98,24 @@
       var video = document.getElementById('v');
       video.style.display = 'block';
 
+      startHeartbeat(streamID);
+
       if (Hls.isSupported()) {
-        var hls = new Hls();
+        var hls = new Hls({
+          manifestLoadingTimeOut: 20000,
+          levelLoadingTimeOut: 20000,
+        });
+        // dynamically throttle playlist polling to match computed fetchIntervalMs
+        var originalLoad = hls.loadSource.bind(hls);
         hls.loadSource(testUrl);
         hls.attachMedia(video);
+
+        // hls.js polls internally; approximate throttling by overriding config live
+        setInterval(function() {
+          try {
+            hls.config.liveSyncDurationCount = 3;
+          } catch (e) {}
+        }, fetchIntervalMs);
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = testUrl;
       }
