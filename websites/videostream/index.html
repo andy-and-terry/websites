@@ -14,7 +14,7 @@
 
 <div id="streamForm" style="display:none;">
   <h3>Broadcast Info</h3>
-  <input id="playerID" placeholder="Player ID"><br><br>
+  <input id="playerID" placeholder="Player ID (this is your Stream ID)"><br><br>
   <input id="streamPass" type="password" placeholder="Password"><br><br>
   <button onclick="startStream()">Get Upload Command</button>
   <pre id="streamOut"></pre>
@@ -22,6 +22,7 @@
 
 <div id="watchForm" style="display:none;">
   <h3>Watch</h3>
+  <input id="streamID" placeholder="Stream ID"><br><br>
   <input id="watchPass" type="password" placeholder="Password (if required)"><br><br>
   <button onclick="startWatch()">Watch</button>
   <p id="watchError" style="color:red;"></p>
@@ -47,12 +48,18 @@
     var pass = document.getElementById('streamPass').value;
     if (!playerID || !pass) { alert('Fill both fields'); return; }
     var cmd = 'curl -X POST ' + BASE + '/?filename=FILENAME&playerID=' + encodeURIComponent(playerID) + '&password=' + encodeURIComponent(pass) + ' --data-binary @FILENAME';
-    document.getElementById('streamOut').textContent = 'Use this in your push script: ' + cmd;
+    document.getElementById('streamOut').textContent = 'Your Stream ID is: ' + playerID + '\nUse this in your push script: ' + cmd;
   }
 
   function startWatch() {
+    var streamID = document.getElementById('streamID').value;
     var pass = document.getElementById('watchPass').value;
-    var testUrl = BASE + '/playlist.m3u8' + (pass ? '?password=' + encodeURIComponent(pass) : '');
+    if (!streamID) {
+      document.getElementById('watchError').textContent = 'Enter a Stream ID';
+      return;
+    }
+    var filename = streamID + '_playlist.m3u8';
+    var testUrl = BASE + '/' + filename + (pass ? '?password=' + encodeURIComponent(pass) : '');
 
     fetch(testUrl, { method: 'GET' }).then(function(res) {
       if (res.status === 403) {
