@@ -153,17 +153,127 @@
     }
 
     .action-btn {
+      font: inherit;
       font-size: 12px;
       padding: 4px 9px;
+      border: none;
       border-radius: 999px;
       background: #f1f0e8;
       color: #444441;
       text-decoration: none;
       white-space: nowrap;
+      cursor: pointer;
     }
 
     .action-btn:hover {
       background: #e2e0d0;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .btn-primary {
+      background: #0c447c;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0a3760;
+    }
+
+    .comment-form {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin: 0 0 10px;
+      padding: 10px;
+      background: #f8f7f2;
+      border-radius: 8px;
+    }
+
+    .post-card.open .comment-form.open {
+      display: flex;
+    }
+
+    .comment-form textarea,
+    .comment-form input,
+    .modal textarea,
+    .modal input[type="text"],
+    .modal input[type="email"] {
+      font: inherit;
+      font-size: 13px;
+      padding: 6px 8px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 6px;
+      resize: vertical;
+    }
+
+    .comment-form-actions,
+    .modal-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .status-msg {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+      min-height: 1em;
+    }
+
+    .status-msg.error {
+      color: #a02020;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .modal label {
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .modal .checkbox-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal .checkbox-row input {
+      width: auto;
     }
 
     .badge {
@@ -190,6 +300,33 @@
     <p>Loading news&hellip;</p>
   </div>
 
+  <div class="modal-overlay" id="add-post-modal">
+    <form class="modal" id="add-post-form" novalidate>
+      <h2>Suggest a new post</h2>
+      <label>Your email
+        <input type="email" name="fromEmail" required>
+      </label>
+      <label>Title
+        <input type="text" name="title" required>
+      </label>
+      <label>Summary
+        <input type="text" name="summary">
+      </label>
+      <label>Content
+        <textarea name="content" rows="4"></textarea>
+      </label>
+      <label class="checkbox-row">
+        <input type="checkbox" name="important">
+        Mark as important
+      </label>
+      <p class="status-msg" id="add-post-status"></p>
+      <div class="modal-actions">
+        <button type="button" class="action-btn" id="add-post-cancel">Cancel</button>
+        <button type="submit" class="action-btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
 <script>
   (() => {
     "use strict";
@@ -197,18 +334,15 @@
     const DATA_DIR = "assets/data/";
     const DISMISSED_KEY = "latestNewsDismissedBanners";
 
-    const REPORT_FORM_URL =
-      "https://docs.google.com/forms/d/e/1FAIpQLSd6UTp346XZBlIvx9nAIziC-OitpheKhtS5zcSr74SYxmEC4g/viewform?usp=publish-editor";
-
-    const ADD_POST_FORM_URL =
-      "https://docs.google.com/forms/d/e/1FAIpQLSfDtFivE7wSPK8FkISpylP81XrhLT_94LX0UBf0psgjogZ5Bg/viewform?usp=publish-editor";
-
-    const CONTACT_EMAIL = "yucheng.lee29@gmail.com";
-
-    const WEB3FORMS_ACCESS_KEY = "";
+    // Deploy valtown/newsApi.ts as an HTTP val on val.town, then paste
+    // its live URL here (Val Town -> your val -> Copy URL).
+    const NEWS_API_URL = "https://REPLACE-WITH-YOUR-VAL-URL.web.val.run";
 
     const postList = document.getElementById("post-list");
     const bannerContainer = document.getElementById("banners");
+    const addPostModal = document.getElementById("add-post-modal");
+    const addPostForm = document.getElementById("add-post-form");
+    const addPostStatus = document.getElementById("add-post-status");
 
 
     function escapeHtml(value) {
@@ -336,66 +470,25 @@
     }
 
 
-    function commentMailto(post) {
-      const subject = encodeURIComponent(
-        "Comment on: " + post.title
-      );
-
-      const body = encodeURIComponent(
-        "Regarding " +
-        post.author +
-        "'s post \"" +
-        post.title +
-        "\":\n\n"
-      );
-
-      return (
-        "mailto:" +
-        CONTACT_EMAIL +
-        "?subject=" +
-        subject +
-        "&body=" +
-        body
-      );
-    }
-
-
-    async function notifyAuthorOfReport(post) {
-      if (
-        !WEB3FORMS_ACCESS_KEY ||
-        !post ||
-        !post.authorEmail
-      ) {
-        return;
-      }
-
+    async function postToApi(action, payload) {
       try {
-        await fetch(
-          "https://api.web3forms.com/submit",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-            },
-            body: JSON.stringify({
-              access_key: WEB3FORMS_ACCESS_KEY,
-              subject:
-                "Your post was flagged: " +
-                post.title,
-              email: post.authorEmail,
-              message:
-                "Your post \"" +
-                post.title +
-                "\" was reported by a reader."
-            })
-          }
-        );
+        const res = await fetch(NEWS_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action, ...payload })
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          return {
+            ok: false,
+            error: data.error || `Request failed (${res.status})`
+          };
+        }
+
+        return { ok: true };
       } catch (err) {
-        console.warn(
-          "Unable to notify author.",
-          err
-        );
+        return { ok: false, error: "Network error" };
       }
     }
 
@@ -406,29 +499,36 @@
              role="group"
              aria-label="Post actions">
 
-          <a class="action-btn report-btn"
-             data-id="${post.id}"
-             href="${REPORT_FORM_URL}"
-             target="_blank"
-             rel="noopener"
-             title="Report this post">
+          <button type="button"
+                  class="action-btn report-btn"
+                  data-id="${post.id}"
+                  title="Report this post">
             Report
-          </a>
+          </button>
 
-          <a class="action-btn"
-             href="${commentMailto(post)}"
-             title="Email the author">
+          <button type="button"
+                  class="action-btn comment-btn"
+                  data-id="${post.id}"
+                  title="Comment on this post">
             Comment
-          </a>
+          </button>
 
-          <a class="action-btn"
-             href="${ADD_POST_FORM_URL}"
-             target="_blank"
-             rel="noopener"
-             title="Suggest a new post">
+          <button type="button"
+                  class="action-btn add-post-btn"
+                  title="Suggest a new post">
             Add post
-          </a>
+          </button>
 
+        </div>
+
+        <div class="comment-form" id="comment-form-${post.id}">
+          <textarea rows="3" placeholder="Your comment"></textarea>
+          <input type="email" placeholder="Your email (optional)">
+          <p class="status-msg"></p>
+          <div class="comment-form-actions">
+            <button type="button" class="action-btn comment-cancel">Cancel</button>
+            <button type="button" class="action-btn btn-primary comment-send">Send</button>
+          </div>
         </div>
       `;
     }
@@ -480,7 +580,7 @@
             </p>
 
             <p class="post-content">
-              ${post.content || ""}
+              ${escapeHtml(post.content || "")}
             </p>
 
           </article>
@@ -525,10 +625,159 @@
                 Number(button.dataset.id)
               );
 
-              notifyAuthorOfReport(post);
+              if (!post || button.disabled) {
+                return;
+              }
+
+              if (!window.confirm(`Report "${post.title}"?`)) {
+                return;
+              }
+
+              button.disabled = true;
+              button.textContent = "Reporting…";
+
+              postToApi("report", {
+                postId: post.id,
+                postTitle: post.title,
+                authorName: post.author,
+                authorEmail: post.authorEmail
+              }).then((result) => {
+                if (result.ok) {
+                  button.textContent = "Reported";
+                } else {
+                  button.disabled = false;
+                  button.textContent = "Report";
+                  window.alert(`Could not report this post: ${result.error}`);
+                }
+              });
             }
           );
 
+        });
+
+
+      document
+        .querySelectorAll(".add-post-btn")
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            (event) => {
+              event.stopPropagation();
+              openAddPostModal();
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(".comment-btn")
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            (event) => {
+              event.stopPropagation();
+
+              const id = Number(button.dataset.id);
+              const card = button.closest(".post-card");
+
+              if (!card.classList.contains("open")) {
+                openPost(card);
+              }
+
+              document
+                .querySelectorAll(".comment-form.open")
+                .forEach((form) => {
+                  if (form.id !== `comment-form-${id}`) {
+                    form.classList.remove("open");
+                  }
+                });
+
+              const form = document.getElementById(`comment-form-${id}`);
+              form.classList.toggle("open");
+
+              if (form.classList.contains("open")) {
+                form.querySelector("textarea").focus();
+              }
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(".comment-form")
+        .forEach((form) => {
+          const id = Number(form.id.replace("comment-form-", ""));
+
+          form.addEventListener("click", (event) => {
+            event.stopPropagation();
+          });
+
+          form.addEventListener("keypress", (event) => {
+            event.stopPropagation();
+          });
+
+          form.querySelector(".comment-cancel").addEventListener(
+            "click",
+            () => {
+              form.classList.remove("open");
+              form.querySelector("textarea").value = "";
+              form.querySelector("input").value = "";
+
+              const status = form.querySelector(".status-msg");
+              status.textContent = "";
+              status.classList.remove("error");
+            }
+          );
+
+          form.querySelector(".comment-send").addEventListener(
+            "click",
+            () => {
+              const post = postsById.get(id);
+              const textarea = form.querySelector("textarea");
+              const emailInput = form.querySelector("input");
+              const status = form.querySelector(".status-msg");
+              const message = textarea.value.trim();
+
+              if (!message) {
+                status.classList.add("error");
+                status.textContent = "Write a comment first.";
+                return;
+              }
+
+              const sendBtn = form.querySelector(".comment-send");
+              sendBtn.disabled = true;
+              status.classList.remove("error");
+              status.textContent = "Sending…";
+
+              postToApi("comment", {
+                postId: post.id,
+                postTitle: post.title,
+                message,
+                fromEmail: emailInput.value.trim()
+              }).then((result) => {
+                sendBtn.disabled = false;
+
+                if (result.ok) {
+                  textarea.value = "";
+                  emailInput.value = "";
+                  status.classList.remove("error");
+                  status.textContent = "Sent — thanks!";
+
+                  setTimeout(() => {
+                    form.classList.remove("open");
+                    status.textContent = "";
+                  }, 1500);
+                } else {
+                  status.classList.add("error");
+                  status.textContent = result.error;
+                }
+              });
+            }
+          );
         });
 
 
@@ -544,6 +793,70 @@
           );
 
         });
+    }
+
+
+    function openAddPostModal() {
+      addPostForm.reset();
+      addPostStatus.textContent = "";
+      addPostStatus.classList.remove("error");
+      addPostModal.classList.add("open");
+    }
+
+
+    function closeAddPostModal() {
+      addPostModal.classList.remove("open");
+    }
+
+
+    function initAddPostModal() {
+      document
+        .getElementById("add-post-cancel")
+        .addEventListener("click", closeAddPostModal);
+
+      addPostModal.addEventListener("click", (event) => {
+        if (event.target === addPostModal) {
+          closeAddPostModal();
+        }
+      });
+
+      addPostForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const data = new FormData(addPostForm);
+        const title = String(data.get("title") || "").trim();
+        const fromEmail = String(data.get("fromEmail") || "").trim();
+
+        if (!title || !fromEmail) {
+          addPostStatus.classList.add("error");
+          addPostStatus.textContent = "Email and title are required.";
+          return;
+        }
+
+        const submitBtn = addPostForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        addPostStatus.classList.remove("error");
+        addPostStatus.textContent = "Sending…";
+
+        postToApi("addPost", {
+          title,
+          summary: String(data.get("summary") || "").trim(),
+          content: String(data.get("content") || "").trim(),
+          important: data.get("important") === "on",
+          fromEmail
+        }).then((result) => {
+          submitBtn.disabled = false;
+
+          if (result.ok) {
+            addPostStatus.classList.remove("error");
+            addPostStatus.textContent = "Sent — thanks!";
+            setTimeout(closeAddPostModal, 1200);
+          } else {
+            addPostStatus.classList.add("error");
+            addPostStatus.textContent = result.error;
+          }
+        });
+      });
     }
 
 
@@ -675,6 +988,7 @@
     }
 
 
+    initAddPostModal();
     init();
 
   })();
