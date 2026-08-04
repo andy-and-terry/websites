@@ -28,13 +28,29 @@ browser via `localStorage`) until unmarked or removed.
 
 ## Configuration
 
-- **Report** opens a Google Form (`REPORT_FORM_URL` in `index.html`).
-- **Add post** opens a Google Form (`ADD_POST_FORM_URL` in `index.html`).
-- **Comment** opens a `mailto:` to `CONTACT_EMAIL` (currently
-  yucheng.lee29@gmail.com) for now. It's meant to move to a
-  Web3Forms-backed form later — ask for that change when ready.
-- Reporting a post also pings [Web3Forms](https://web3forms.com) to notify
-  the author (`authorEmail` on the post) it was flagged. Paste your access
-  key into `WEB3FORMS_ACCESS_KEY` in `index.html` and enable an
-  autoresponder on the `email` field in the Web3Forms dashboard — until
-  then this step is a no-op.
+**Report**, **Comment**, and **Add post** all POST JSON to a single
+val.town HTTP val (`NEWS_API_URL` in `index.html`), which emails you via
+val.town's built-in `std/email`. The val's source lives at
+`valtown/newsApi.ts`.
+
+### Deploying the val
+
+1. On [val.town](https://www.val.town), create a new **HTTP val** and
+   paste in the contents of `valtown/newsApi.ts`.
+2. Deploy it, then copy its live URL (`https://<you>-<val-name>.web.val.run`).
+3. Paste that URL into `NEWS_API_URL` in `index.html`.
+4. Once the site has a real domain, tighten `ALLOWED_ORIGIN` in
+   `valtown/newsApi.ts` from `"*"` to that origin and redeploy.
+
+### Request shape
+
+```json
+{ "action": "report", "postId": 1, "postTitle": "...", "authorName": "...", "authorEmail": "..." }
+{ "action": "comment", "postId": 1, "postTitle": "...", "message": "...", "fromEmail": "..." }
+{ "action": "addPost", "title": "...", "summary": "...", "content": "...", "important": false, "fromEmail": "..." }
+```
+
+`std/email` can only send to the val.town account's own address (it can't
+relay to arbitrary recipients), so every action lands as one email to you
+with the relevant contact info in the body — reply to the commenter/author
+directly from there.
