@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SOS Reports</title>
+<style>
+  body{background:#0a0a0f;color:#e0e0e0;font-family:monospace;padding:20px}
+  h1{color:#00f0ff}
+  .card{border:1px solid #ff2bd6;border-radius:8px;padding:12px;margin:10px 0}
+  a{color:#00f0ff}
+  button{background:#ff2bd6;color:#0a0a0f;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>SOS Reports</h1>
+<button onclick="load()">Refresh</button>
+<div id="out">Loading...</div>
+<script>
+const VAL_URL = "https://andyandterry--75324698964a11f1babd1607ee4eb77e.web.val.run";
+
+function haversineKm(lat1, lon1, lat2, lon2){
+  const R = 6371;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function renderCard(r, dist){
+  return `
+    <div class="card">
+      <div><b>${r.created_at}</b>${dist !== null ? ` — ${dist.toFixed(2)} km away` : ""}</div>
+      <div>Lat: ${r.gpslocationN}, Lon: ${r.gpslocationE}</div>
+      <div><a href="https://maps.google.com/?q=${r.gpslocationN},${r.gpslocationE}" target="_blank">Open in Maps</a></div>
+      ${r.name ? `<div>Name: ${r.name}</div>` : ""}
+      ${r.condition ? `<div>Condition: ${r.condition}</div>` : ""}
+      ${r.notes ? `<div>Notes: ${r.notes}</div>` : ""}
+    </div>`;
+}
+
+async function load(){
+  const out = document.getElementById("out");
+  out.textContent = "Loading...";
+  try {
+    const res = await fetch(`${VAL_URL}/?tag=check`);
+    const data = await res.json();
+    if (!data.reports || !data.reports.length){
+      out.textContent = "No reports.";
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      const withDist = data.reports.map(r => ({
+        r, dist: haversineKm(latitude, longitude, parseFloat(r.gpslocationN), parseFloat(r.gpslocationE))
+      }));
+      withDist.sort((a,b) => a.dist - b.dist);
+
+      const near = withDist.filter(x => x.dist <= 1);
+      const mid = withDist.filter(x => x.dist > 1 && x.dist <= 5);
+      const far = withDist.filter(x => x.dist > 5);
+
+      let html = "";
+      if (near.length) html += `<h2 style="color:#00f0ff">Within 1km</h2>` + near.map(x => renderCard(x.r, x.dist)).join("");
+      if (mid.length) html += `<h2 style="color:#00f0ff">Within 5km</h2>` + mid.map(x => renderCard(x.r, x.dist)).join("");
+      if (far.length) html += `<h2 style="color:#888">Farther away</h2>` + far.map(x => renderCard(x.r, x.dist)).join("");
+      out.innerHTML = html;
+    }, () => {
+      // Geolocation denied/unavailable — fall back to unsorted list, no distances
+      out.innerHTML = `<p style="color:#888">Location unavailable — showing all reports unsorted.</p>` +
+        data.reports.map(r => renderCard(r, null)).join("");
+    });
+  } catch(e){
+    out.textContent = "Error: " + e.message;
+  }
+}
+load();
+</script>
+</body>
+</html>
