@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<head>
+  <meta charset="UTF-8">
+  <title>Nothing</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
+  <script>
+    function fireConfetti() {
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
+  </script>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <p>To the page called <span id="random"></span></p>
+  <button onclick="fireConfetti">Click me</button>
+  <script>
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+setInterval(() => {
+  const el = document.getElementById('random');
+  let text = '';
+  for (let i = 0; i < 8; i++) {
+    text += chars[Math.floor(Math.random() * chars.length)];
+  }
+  el.textContent = text;
+}, 50);
+  </script>
+</body>
