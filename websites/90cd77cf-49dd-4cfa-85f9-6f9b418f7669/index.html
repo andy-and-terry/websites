@@ -2,9 +2,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Nothing</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
   <script>
-    function fireConfetti() {
+    function fire() {
   confetti({
     particleCount: 150,
     spread: 70,
@@ -16,7 +16,7 @@
 <body>
   <h1>Welcome</h1>
   <p>To the page called <span id="random"></span></p>
-  <button onclick="fireConfetti">Click me</button>
+  <button onclick="fire">Click me</button>
   <script>
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
 setInterval(() => {
