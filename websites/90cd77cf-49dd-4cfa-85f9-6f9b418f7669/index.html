@@ -10,8 +10,18 @@
   <button onclick="fire()">Click me</button>
   <script>
     function fire() {
-      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-      document.querySelector('h1').textContent = 'Happy Teachers\' Day!';
+      document.getElementById('sub').style.display = 'none';
+      document.querySelector('h1').textContent = "Happy Teachers\' Day!";
+      setInterval(() => {
+        confetti({
+          particleCount: 3,
+          startVelocity: 0,
+          ticks: 300,
+          gravity: 0.4,
+          spread: 100,
+          origin: { x: Math.random(), y: -0.1 }
+        });
+      }, 100);
     }
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
